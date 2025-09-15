@@ -99,6 +99,11 @@ function App() {
                 <Planning />
               </ProtectedRoute>
             } />
+            <Route path="/analytics" element={
+              <ProtectedRoute>
+                <Analytics />
+              </ProtectedRoute>
+            } />
             <Route path="/" element={<Navigate to="/dashboard" />} />
           </Routes>
         </BrowserRouter>
