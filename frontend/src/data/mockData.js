@@ -148,60 +148,70 @@ export const mockEmployees = [
     id: 1,
     name: 'Faustino Shields',
     department: 'Engineering',
+    entity: 'Main',
     avatar: '/api/placeholder/32/32'
   },
   {
     id: 2,
     name: 'Pat Schneider',
     department: 'Engineering',
+    entity: 'Main',
     avatar: '/api/placeholder/32/32'
   },
   {
     id: 3,
     name: 'Aliya Schinner',
     department: 'Product',
+    entity: 'Innovation Lab',
     avatar: '/api/placeholder/32/32'
   },
   {
     id: 4,
     name: 'Daan Aarden',
     department: 'Design',
+    entity: 'Main',
     avatar: '/api/placeholder/32/32'
   },
   {
     id: 5,
     name: 'Marie Renault',
     department: 'Design',
+    entity: 'Creative Studio',
     avatar: '/api/placeholder/32/32'
   },
   {
     id: 6,
     name: 'Loraine Stracke',
     department: 'People',
+    entity: 'Main',
     avatar: '/api/placeholder/32/32'
   },
   {
     id: 7,
     name: 'Luis Lopez',
     department: 'Engineering',
+    entity: 'R&D Division',
     avatar: '/api/placeholder/32/32'
   },
   {
     id: 8,
     name: 'Sarah Johnson',
     department: 'Marketing',
+    entity: 'Main',
     avatar: '/api/placeholder/32/32'
   },
   {
     id: 9,
     name: 'Mike Chen',
     department: 'Engineering',
+    entity: 'Cloud Team',
     avatar: '/api/placeholder/32/32'
   },
   {
     id: 10,
     name: 'Lisa Wong',
     department: 'Product',
+    entity: 'Innovation Lab',
     avatar: '/api/placeholder/32/32'
   }
 ];
@@ -219,4 +229,113 @@ export const mockPlanningData = {
   '9-1': 8, '9-2': 8, '9-3': 8, '9-4': 8, '9-5': 8,
   '10-1': 8, '10-2': 8, '10-3': 8, '10-4': 8, '10-5': 8,
   // Add more days as needed
+};
+
+// Mock planning history
+export const mockPlanningHistory = [
+  {
+    id: 1,
+    employeeId: 1,
+    employeeName: 'Faustino Shields',
+    day: 1,
+    month: 9,
+    year: 2025,
+    oldValue: 6,
+    newValue: 8,
+    changedBy: 'Admin User',
+    changedAt: '2025-09-15T10:30:00Z',
+    reason: 'Resource allocation update'
+  },
+  {
+    id: 2,
+    employeeId: 2,
+    employeeName: 'Pat Schneider',
+    day: 3,
+    month: 9,
+    year: 2025,
+    oldValue: 8,
+    newValue: 6,
+    changedBy: 'Manager User',
+    changedAt: '2025-09-15T09:15:00Z',
+    reason: 'Sick leave adjustment'
+  },
+  {
+    id: 3,
+    employeeId: 3,
+    employeeName: 'Aliya Schinner',
+    day: 5,
+    month: 9,
+    year: 2025,
+    oldValue: 4,
+    newValue: 8,
+    changedBy: 'Admin User',
+    changedAt: '2025-09-14T16:45:00Z',
+    reason: 'Overtime approval'
+  }
+];
+
+// Mock user permissions
+export const mockUserPermissions = {
+  'Administrator': {
+    role: 'Admin',
+    canEdit: true,
+    canDelete: true,
+    canViewAll: true,
+    departments: ['Engineering', 'Product', 'Design', 'People', 'Marketing']
+  },
+  'Manager': {
+    role: 'Manager',
+    canEdit: true,
+    canDelete: false,
+    canViewAll: false,
+    departments: ['Engineering', 'Product']
+  },
+  'User': {
+    role: 'User',
+    canEdit: false,
+    canDelete: false,
+    canViewAll: false,
+    departments: []
+  }
+};
+
+// Mock analytics data
+export const mockAnalyticsData = {
+  planningTrend: [
+    { label: 'Week 1', value: 320 },
+    { label: 'Week 2', value: 450 },
+    { label: 'Week 3', value: 380 },
+    { label: 'Week 4', value: 520 },
+    { label: 'Week 5', value: 490 },
+    { label: 'Week 6', value: 610 },
+    { label: 'Week 7', value: 580 }
+  ],
+  departmentHours: [
+    { label: 'Engineering', value: 2400 },
+    { label: 'Product', value: 1800 },
+    { label: 'Design', value: 1200 },
+    { label: 'Marketing', value: 800 },
+    { label: 'People', value: 600 }
+  ],
+  resourceDistribution: [
+    { label: 'Development', value: 45, color: '#3b82f6' },
+    { label: 'Design', value: 25, color: '#10b981' },
+    { label: 'Management', value: 15, color: '#f59e0b' },
+    { label: 'Research', value: 10, color: '#ef4444' },
+    { label: 'Other', value: 5, color: '#8b5cf6' }
+  ],
+  topPerformers: [
+    { name: 'Faustino Shields', department: 'Engineering', hours: 180, growth: 12 },
+    { name: 'Aliya Schinner', department: 'Product', hours: 165, growth: 8 },
+    { name: 'Marie Renault', department: 'Design', hours: 152, growth: 15 },
+    { name: 'Luis Lopez', department: 'Engineering', hours: 148, growth: 5 },
+    { name: 'Sarah Johnson', department: 'Marketing', hours: 140, growth: 18 }
+  ],
+  recentActivity: [
+    { action: 'Planning updated for Engineering team', user: 'Admin User', time: '2 hours ago' },
+    { action: 'New employee added to Product department', user: 'HR Manager', time: '4 hours ago' },
+    { action: 'Weekly report generated', user: 'System', time: '6 hours ago' },
+    { action: 'Overtime approved for Design team', user: 'Project Manager', time: '8 hours ago' },
+    { action: 'Resource allocation optimized', user: 'Operations Lead', time: '1 day ago' }
+  ]
 };

@@ -23,9 +23,10 @@ import {
   DollarSign,
   Activity,
   UserCheck,
-  Calendar
+  Calendar,
+  BarChart3
 } from 'lucide-react';
-import { mockDashboardData, mockTableData } from '../data/mockData';
+import { mockDashboardData, mockTableData, mockNotifications } from '../data/mockData';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '../hooks/use-toast';
 
@@ -37,6 +38,8 @@ const Dashboard = () => {
   const [editingData, setEditingData] = useState({});
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
+  const unreadNotifications = mockNotifications.filter(n => !n.read).length;
 
   const handleLogout = () => {
     logout();
@@ -82,8 +85,9 @@ const Dashboard = () => {
   const sidebarItems = [
     { icon: Home, label: 'Dashboard', active: true, path: '/dashboard' },
     { icon: Calendar, label: 'Planning', active: false, path: '/planning' },
+    { icon: BarChart3, label: 'Analytics', active: false, path: '/analytics' },
     { icon: Users, label: 'Users' },
-    { icon: Activity, label: 'Analytics' },
+    { icon: Activity, label: 'Reports' },
     { icon: Settings, label: 'Settings' },
   ];
 
@@ -146,7 +150,11 @@ const Dashboard = () => {
                 className="relative"
               >
                 <Bell className="h-4 w-4" />
-                <span className="absolute -top-1 -right-1 h-2 w-2 bg-red-500 rounded-full"></span>
+                {unreadNotifications > 0 && (
+                  <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                    {unreadNotifications}
+                  </span>
+                )}
               </Button>
               <Button
                 variant="ghost"
@@ -192,6 +200,72 @@ const Dashboard = () => {
                 </Card>
               );
             })}
+          </div>
+
+          {/* Quick Actions */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="hover:shadow-lg transition-shadow duration-200 cursor-pointer" onClick={() => navigate('/planning')}>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Calendar className="h-5 w-5 text-blue-600" />
+                  <span>Planning</span>
+                </CardTitle>
+                <CardDescription>Manage monthly planning and resource allocation</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-2xl font-bold text-slate-900">85%</div>
+                    <div className="text-sm text-slate-600">Utilization</div>
+                  </div>
+                  <Button size="sm">
+                    View Details
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow duration-200 cursor-pointer" onClick={() => navigate('/analytics')}>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <BarChart3 className="h-5 w-5 text-green-600" />
+                  <span>Analytics</span>
+                </CardTitle>
+                <CardDescription>View comprehensive reports and insights</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-2xl font-bold text-slate-900">12</div>
+                    <div className="text-sm text-slate-600">Active Reports</div>
+                  </div>
+                  <Button size="sm">
+                    View Charts
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow duration-200 cursor-pointer" onClick={() => navigate('/notifications')}>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Bell className="h-5 w-5 text-orange-600" />
+                  <span>Notifications</span>
+                </CardTitle>
+                <CardDescription>Stay updated with system alerts and messages</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-2xl font-bold text-slate-900">{unreadNotifications}</div>
+                    <div className="text-sm text-slate-600">Unread</div>
+                  </div>
+                  <Button size="sm">
+                    View All
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Data Table */}
