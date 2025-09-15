@@ -6,6 +6,7 @@ import Dashboard from "./components/Dashboard";
 import Profile from "./components/Profile";
 import Notifications from "./components/Notifications";
 import Planning from "./components/Planning";
+import Analytics from "./components/Analytics";
 import { Toaster } from "./components/ui/toaster";
 
 // Auth Context
