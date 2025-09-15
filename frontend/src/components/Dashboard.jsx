@@ -22,7 +22,8 @@ import {
   TrendingUp,
   DollarSign,
   Activity,
-  UserCheck
+  UserCheck,
+  Calendar
 } from 'lucide-react';
 import { mockDashboardData, mockTableData } from '../data/mockData';
 import { useNavigate } from 'react-router-dom';
@@ -79,7 +80,8 @@ const Dashboard = () => {
   );
 
   const sidebarItems = [
-    { icon: Home, label: 'Dashboard', active: true },
+    { icon: Home, label: 'Dashboard', active: true, path: '/dashboard' },
+    { icon: Calendar, label: 'Planning', active: false, path: '/planning' },
     { icon: Users, label: 'Users' },
     { icon: Activity, label: 'Analytics' },
     { icon: Settings, label: 'Settings' },
@@ -108,6 +110,7 @@ const Dashboard = () => {
                 <Button
                   variant={item.active ? "default" : "ghost"}
                   className={`w-full justify-start ${item.active ? 'bg-slate-900 text-white' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'}`}
+                  onClick={() => item.path && navigate(item.path)}
                 >
                   <item.icon className="mr-3 h-4 w-4" />
                   {item.label}

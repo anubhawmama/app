@@ -141,3 +141,82 @@ export const mockNotifications = [
     read: true
   }
 ];
+
+// New mock data for employees and planning
+export const mockEmployees = [
+  {
+    id: 1,
+    name: 'Faustino Shields',
+    department: 'Engineering',
+    avatar: '/api/placeholder/32/32'
+  },
+  {
+    id: 2,
+    name: 'Pat Schneider',
+    department: 'Engineering',
+    avatar: '/api/placeholder/32/32'
+  },
+  {
+    id: 3,
+    name: 'Aliya Schinner',
+    department: 'Product',
+    avatar: '/api/placeholder/32/32'
+  },
+  {
+    id: 4,
+    name: 'Daan Aarden',
+    department: 'Design',
+    avatar: '/api/placeholder/32/32'
+  },
+  {
+    id: 5,
+    name: 'Marie Renault',
+    department: 'Design',
+    avatar: '/api/placeholder/32/32'
+  },
+  {
+    id: 6,
+    name: 'Loraine Stracke',
+    department: 'People',
+    avatar: '/api/placeholder/32/32'
+  },
+  {
+    id: 7,
+    name: 'Luis Lopez',
+    department: 'Engineering',
+    avatar: '/api/placeholder/32/32'
+  },
+  {
+    id: 8,
+    name: 'Sarah Johnson',
+    department: 'Marketing',
+    avatar: '/api/placeholder/32/32'
+  },
+  {
+    id: 9,
+    name: 'Mike Chen',
+    department: 'Engineering',
+    avatar: '/api/placeholder/32/32'
+  },
+  {
+    id: 10,
+    name: 'Lisa Wong',
+    department: 'Product',
+    avatar: '/api/placeholder/32/32'
+  }
+];
+
+// Mock planning data - format: "employeeId-day": hours
+export const mockPlanningData = {
+  '1-1': 8, '1-2': 8, '1-3': 8, '1-4': 8, '1-5': 6,
+  '2-1': 7, '2-2': 8, '2-3': 8, '2-4': 8, '2-5': 8,
+  '3-1': 8, '3-2': 8, '3-3': 6, '3-4': 8, '3-5': 8,
+  '4-1': 8, '4-2': 8, '4-3': 8, '4-4': 8, '4-5': 8,
+  '5-1': 6, '5-2': 8, '5-3': 8, '5-4': 8, '5-5': 8,
+  '6-1': 8, '6-2': 8, '6-3': 8, '6-4': 8, '6-5': 8,
+  '7-1': 8, '7-2': 8, '7-3': 8, '7-4': 8, '7-5': 8,
+  '8-1': 8, '8-2': 8, '8-3': 8, '8-4': 8, '8-5': 8,
+  '9-1': 8, '9-2': 8, '9-3': 8, '9-4': 8, '9-5': 8,
+  '10-1': 8, '10-2': 8, '10-3': 8, '10-4': 8, '10-5': 8,
+  // Add more days as needed
+};
