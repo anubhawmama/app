@@ -342,7 +342,7 @@ const SystemManagement = () => {
 
       <div className="p-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="departments" className="flex items-center space-x-2">
               <Building2 className="h-4 w-4" />
               <span>Departments</span>
@@ -358,6 +358,10 @@ const SystemManagement = () => {
             <TabsTrigger value="subcategories" className="flex items-center space-x-2">
               <Layers className="h-4 w-4" />
               <span>Subcategories</span>
+            </TabsTrigger>
+            <TabsTrigger value="products" className="flex items-center space-x-2">
+              <Tag className="h-4 w-4" />
+              <span>Products</span>
             </TabsTrigger>
             <TabsTrigger value="users" className="flex items-center space-x-2">
               <Users className="h-4 w-4" />
