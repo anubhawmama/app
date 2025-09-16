@@ -6,6 +6,7 @@ import Dashboard from "./components/Dashboard";
 import Profile from "./components/Profile";
 import Notifications from "./components/Notifications";
 import Planning from "./components/Planning";
+import EnhancedPlanning from "./components/EnhancedPlanning";
 import Analytics from "./components/Analytics";
 import SystemManagement from "./components/SystemManagement";
 import PlanningRequests from "./components/PlanningRequests";
