@@ -1,18 +1,36 @@
 export const mockUsers = [
   {
     id: 1,
-    name: 'Admin User',
-    email: 'admin@demo.com',
-    password: 'admin123',
-    role: 'Administrator',
+    name: 'Super Admin',
+    email: 'superadmin@demo.com',
+    password: 'super123',
+    role: 'SuperAdmin',
     avatar: '/api/placeholder/40/40'
   },
   {
     id: 2,
-    name: 'John Doe',
-    email: 'john@demo.com',
-    password: 'password123',
-    role: 'Manager',
+    name: 'System Admin',
+    email: 'admin@demo.com',
+    password: 'admin123',
+    role: 'Admin',
+    avatar: '/api/placeholder/40/40'
+  },
+  {
+    id: 3,
+    name: 'John Creator',
+    email: 'creator@demo.com',
+    password: 'creator123',
+    role: 'Creator',
+    departmentId: 1,
+    avatar: '/api/placeholder/40/40'
+  },
+  {
+    id: 4,
+    name: 'Jane Approver',
+    email: 'approver@demo.com',
+    password: 'approver123',
+    role: 'Approver',
+    departmentId: 1,
     avatar: '/api/placeholder/40/40'
   }
 ];
@@ -47,7 +65,8 @@ export const mockTableData = [
     id: 1,
     name: 'Alice Johnson',
     email: 'alice@example.com',
-    role: 'Admin',
+    role: 'Creator',
+    departmentId: 1,
     status: 'Active',
     lastLogin: '2 hours ago',
     avatar: '/api/placeholder/32/32'
@@ -56,7 +75,8 @@ export const mockTableData = [
     id: 2,
     name: 'Bob Smith',
     email: 'bob@example.com',
-    role: 'User',
+    role: 'Approver',
+    departmentId: 2,
     status: 'Active',
     lastLogin: '1 day ago',
     avatar: '/api/placeholder/32/32'
@@ -66,6 +86,7 @@ export const mockTableData = [
     name: 'Carol Williams',
     email: 'carol@example.com',
     role: 'User',
+    departmentId: 1,
     status: 'Inactive',
     lastLogin: '1 week ago',
     avatar: '/api/placeholder/32/32'
@@ -74,7 +95,8 @@ export const mockTableData = [
     id: 4,
     name: 'David Brown',
     email: 'david@example.com',
-    role: 'Moderator',
+    role: 'Creator',
+    departmentId: 3,
     status: 'Active',
     lastLogin: '3 hours ago',
     avatar: '/api/placeholder/32/32'
@@ -84,6 +106,7 @@ export const mockTableData = [
     name: 'Emma Davis',
     email: 'emma@example.com',
     role: 'User',
+    departmentId: 2,
     status: 'Active',
     lastLogin: '30 minutes ago',
     avatar: '/api/placeholder/32/32'
@@ -92,7 +115,8 @@ export const mockTableData = [
     id: 6,
     name: 'Frank Miller',
     email: 'frank@example.com',
-    role: 'User',
+    role: 'Approver',
+    departmentId: 3,
     status: 'Inactive',
     lastLogin: '2 weeks ago',
     avatar: '/api/placeholder/32/32'
@@ -102,136 +126,453 @@ export const mockTableData = [
 export const mockNotifications = [
   {
     id: 1,
-    title: 'New User Registration',
-    message: 'Emma Davis has registered and is awaiting approval.',
+    title: 'Monthly Planning Request',
+    message: 'Please submit your department planning numbers for October 2025.',
     type: 'info',
     timestamp: '2 hours ago',
-    read: false
+    read: false,
+    departmentId: 1,
+    priority: 'high'
   },
   {
     id: 2,
-    title: 'System Update',
-    message: 'Security patch has been successfully applied.',
-    type: 'success',
+    title: 'Plan Approval Required',
+    message: 'Engineering department plan is awaiting your approval.',
+    type: 'warning',
     timestamp: '1 day ago',
-    read: false
+    read: false,
+    priority: 'medium'
   },
   {
     id: 3,
-    title: 'Storage Warning',
-    message: 'Database storage is approaching 80% capacity.',
-    type: 'warning',
+    title: 'Plan Approved',
+    message: 'Your Marketing department plan has been approved.',
+    type: 'success',
     timestamp: '2 days ago',
-    read: true
+    read: true,
+    departmentId: 2,
+    priority: 'low'
   },
   {
     id: 4,
-    title: 'Backup Complete',
-    message: 'Daily backup completed successfully.',
-    type: 'success',
+    title: 'System Update',
+    message: 'New brand categories have been added to the system.',
+    type: 'info',
     timestamp: '3 days ago',
-    read: true
+    read: true,
+    priority: 'low'
   },
   {
     id: 5,
-    title: 'Failed Login Attempt',
-    message: 'Multiple failed login attempts detected for user: john@demo.com',
+    title: 'Planning Deadline',
+    message: 'Reminder: Planning submission deadline is tomorrow.',
     type: 'error',
     timestamp: '1 week ago',
-    read: true
+    read: true,
+    departmentId: 1,
+    priority: 'high'
   }
 ];
 
-// New mock data for employees and planning
+// System Metadata
+export const mockDepartments = [
+  {
+    id: 1,
+    name: 'Engineering',
+    code: 'ENG',
+    description: 'Software development and technical operations',
+    status: 'Active',
+    createdAt: '2024-01-15',
+    createdBy: 'System Admin'
+  },
+  {
+    id: 2,
+    name: 'Marketing',
+    code: 'MKT',
+    description: 'Marketing campaigns and brand promotion',
+    status: 'Active',
+    createdAt: '2024-01-15',
+    createdBy: 'System Admin'
+  },
+  {
+    id: 3,
+    name: 'Sales',
+    code: 'SAL',
+    description: 'Sales operations and customer relations',
+    status: 'Active',
+    createdAt: '2024-01-15',
+    createdBy: 'System Admin'
+  },
+  {
+    id: 4,
+    name: 'Product',
+    code: 'PRD',
+    description: 'Product management and strategy',
+    status: 'Active',
+    createdAt: '2024-02-01',
+    createdBy: 'System Admin'
+  },
+  {
+    id: 5,
+    name: 'Finance',
+    code: 'FIN',
+    description: 'Financial planning and accounting',
+    status: 'Active',
+    createdAt: '2024-02-01',
+    createdBy: 'System Admin'
+  }
+];
+
+export const mockBrands = [
+  {
+    id: 1,
+    name: 'TechCorp',
+    code: 'TC',
+    description: 'Main technology brand',
+    status: 'Active',
+    createdAt: '2024-01-10',
+    createdBy: 'Super Admin'
+  },
+  {
+    id: 2,
+    name: 'InnovateX',
+    code: 'IX',
+    description: 'Innovation-focused sub-brand',
+    status: 'Active',
+    createdAt: '2024-01-10',
+    createdBy: 'Super Admin'
+  },
+  {
+    id: 3,
+    name: 'CloudFirst',
+    code: 'CF',
+    description: 'Cloud services brand',
+    status: 'Active',
+    createdAt: '2024-01-20',
+    createdBy: 'Super Admin'
+  },
+  {
+    id: 4,
+    name: 'DataPro',
+    code: 'DP',
+    description: 'Data analytics solutions',
+    status: 'Inactive',
+    createdAt: '2024-02-15',
+    createdBy: 'Super Admin'
+  }
+];
+
+export const mockCategories = [
+  {
+    id: 1,
+    name: 'Software Development',
+    code: 'SWDEV',
+    description: 'All software development activities',
+    status: 'Active',
+    createdAt: '2024-01-12',
+    createdBy: 'Super Admin'
+  },
+  {
+    id: 2,
+    name: 'Digital Marketing',
+    code: 'DIGMKT',
+    description: 'Online marketing and advertising',
+    status: 'Active',
+    createdAt: '2024-01-12',
+    createdBy: 'Super Admin'
+  },
+  {
+    id: 3,
+    name: 'Customer Support',
+    code: 'CUSSUPP',
+    description: 'Customer service operations',
+    status: 'Active',
+    createdAt: '2024-01-12',
+    createdBy: 'Super Admin'
+  },
+  {
+    id: 4,
+    name: 'Research & Development',
+    code: 'RND',
+    description: 'Research and innovation projects',
+    status: 'Active',
+    createdAt: '2024-01-25',
+    createdBy: 'Super Admin'
+  }
+];
+
+export const mockSubcategories = [
+  {
+    id: 1,
+    name: 'Frontend Development',
+    code: 'FRONTEND',
+    categoryId: 1,
+    description: 'User interface development',
+    status: 'Active',
+    createdAt: '2024-01-12',
+    createdBy: 'Super Admin'
+  },
+  {
+    id: 2,
+    name: 'Backend Development',
+    code: 'BACKEND',
+    categoryId: 1,
+    description: 'Server-side development',
+    status: 'Active',
+    createdAt: '2024-01-12',
+    createdBy: 'Super Admin'
+  },
+  {
+    id: 3,
+    name: 'Mobile Development',
+    code: 'MOBILE',
+    categoryId: 1,
+    description: 'Mobile application development',
+    status: 'Active',
+    createdAt: '2024-01-12',
+    createdBy: 'Super Admin'
+  },
+  {
+    id: 4,
+    name: 'Social Media Marketing',
+    code: 'SOCIAL',
+    categoryId: 2,
+    description: 'Social media campaigns and management',
+    status: 'Active',
+    createdAt: '2024-01-15',
+    createdBy: 'Super Admin'
+  },
+  {
+    id: 5,
+    name: 'Content Marketing',
+    code: 'CONTENT',
+    categoryId: 2,
+    description: 'Content creation and strategy',
+    status: 'Active',
+    createdAt: '2024-01-15',
+    createdBy: 'Super Admin'
+  },
+  {
+    id: 6,
+    name: 'Email Support',
+    code: 'EMAIL',
+    categoryId: 3,
+    description: 'Email-based customer support',
+    status: 'Active',
+    createdAt: '2024-01-18',
+    createdBy: 'Super Admin'
+  },
+  {
+    id: 7,
+    name: 'Live Chat Support',
+    code: 'CHAT',
+    categoryId: 3,
+    description: 'Real-time chat support',
+    status: 'Active',
+    createdAt: '2024-01-18',
+    createdBy: 'Super Admin'
+  }
+];
+
+// Enhanced employees with department relationships
 export const mockEmployees = [
   {
     id: 1,
     name: 'Faustino Shields',
-    department: 'Engineering',
-    entity: 'Main',
+    email: 'faustino@company.com',
+    departmentId: 1,
+    role: 'Creator',
     avatar: '/api/placeholder/32/32'
   },
   {
     id: 2,
     name: 'Pat Schneider',
-    department: 'Engineering',
-    entity: 'Main',
+    email: 'pat@company.com',
+    departmentId: 1,
+    role: 'Approver',
     avatar: '/api/placeholder/32/32'
   },
   {
     id: 3,
     name: 'Aliya Schinner',
-    department: 'Product',
-    entity: 'Innovation Lab',
+    email: 'aliya@company.com',
+    departmentId: 4,
+    role: 'Creator',
     avatar: '/api/placeholder/32/32'
   },
   {
     id: 4,
     name: 'Daan Aarden',
-    department: 'Design',
-    entity: 'Main',
+    email: 'daan@company.com',
+    departmentId: 2,
+    role: 'User',
     avatar: '/api/placeholder/32/32'
   },
   {
     id: 5,
     name: 'Marie Renault',
-    department: 'Design',
-    entity: 'Creative Studio',
+    email: 'marie@company.com',
+    departmentId: 2,
+    role: 'Approver',
     avatar: '/api/placeholder/32/32'
   },
   {
     id: 6,
     name: 'Loraine Stracke',
-    department: 'People',
-    entity: 'Main',
+    email: 'loraine@company.com',
+    departmentId: 5,
+    role: 'Creator',
     avatar: '/api/placeholder/32/32'
   },
   {
     id: 7,
     name: 'Luis Lopez',
-    department: 'Engineering',
-    entity: 'R&D Division',
+    email: 'luis@company.com',
+    departmentId: 1,
+    role: 'User',
     avatar: '/api/placeholder/32/32'
   },
   {
     id: 8,
     name: 'Sarah Johnson',
-    department: 'Marketing',
-    entity: 'Main',
+    email: 'sarah@company.com',
+    departmentId: 2,
+    role: 'Creator',
     avatar: '/api/placeholder/32/32'
   },
   {
     id: 9,
     name: 'Mike Chen',
-    department: 'Engineering',
-    entity: 'Cloud Team',
+    email: 'mike@company.com',
+    departmentId: 1,
+    role: 'User',
     avatar: '/api/placeholder/32/32'
   },
   {
     id: 10,
     name: 'Lisa Wong',
-    department: 'Product',
-    entity: 'Innovation Lab',
+    email: 'lisa@company.com',
+    departmentId: 4,
+    role: 'Approver',
     avatar: '/api/placeholder/32/32'
   }
 ];
 
-// Mock planning data - format: "employeeId-day": hours
+// Enhanced planning data with approval status
 export const mockPlanningData = {
-  '1-1': 8, '1-2': 8, '1-3': 8, '1-4': 8, '1-5': 6,
-  '2-1': 7, '2-2': 8, '2-3': 8, '2-4': 8, '2-5': 8,
-  '3-1': 8, '3-2': 8, '3-3': 6, '3-4': 8, '3-5': 8,
-  '4-1': 8, '4-2': 8, '4-3': 8, '4-4': 8, '4-5': 8,
-  '5-1': 6, '5-2': 8, '5-3': 8, '5-4': 8, '5-5': 8,
-  '6-1': 8, '6-2': 8, '6-3': 8, '6-4': 8, '6-5': 8,
-  '7-1': 8, '7-2': 8, '7-3': 8, '7-4': 8, '7-5': 8,
-  '8-1': 8, '8-2': 8, '8-3': 8, '8-4': 8, '8-5': 8,
-  '9-1': 8, '9-2': 8, '9-3': 8, '9-4': 8, '9-5': 8,
-  '10-1': 8, '10-2': 8, '10-3': 8, '10-4': 8, '10-5': 8,
-  // Add more days as needed
+  '1-1': { planned: 8, actual: 7, status: 'approved', approvedBy: 2, approvedAt: '2025-09-01' },
+  '1-2': { planned: 8, actual: 8, status: 'approved', approvedBy: 2, approvedAt: '2025-09-01' },
+  '1-3': { planned: 8, actual: 6, status: 'pending', submittedBy: 1, submittedAt: '2025-09-15' },
+  '2-1': { planned: 7, actual: 7, status: 'approved', approvedBy: 2, approvedAt: '2025-09-01' },
+  '2-2': { planned: 8, actual: 8, status: 'approved', approvedBy: 2, approvedAt: '2025-09-01' },
+  '3-1': { planned: 8, actual: 8, status: 'approved', approvedBy: 10, approvedAt: '2025-09-01' },
+  '3-2': { planned: 8, actual: 7, status: 'pending', submittedBy: 3, submittedAt: '2025-09-14' },
+  '8-1': { planned: 8, actual: 8, status: 'approved', approvedBy: 5, approvedAt: '2025-09-01' },
+  '8-2': { planned: 8, actual: 9, status: 'rejected', rejectedBy: 5, rejectedAt: '2025-09-10', reason: 'Exceeds budget allocation' },
+  // Add more planning data as needed
 };
 
-// Mock planning history
+// Planning requests/intimations
+export const mockPlanningRequests = [
+  {
+    id: 1,
+    departmentId: 1,
+    month: 10,
+    year: 2025,
+    status: 'sent',
+    sentAt: '2025-09-15T10:00:00Z',
+    sentBy: 2, // Admin
+    dueDate: '2025-09-25',
+    message: 'Please submit your October planning numbers including actual September data.',
+    responses: [
+      { userId: 1, respondedAt: '2025-09-16T14:30:00Z', status: 'submitted' }
+    ]
+  },
+  {
+    id: 2,
+    departmentId: 2,
+    month: 10,
+    year: 2025,
+    status: 'pending',
+    sentAt: '2025-09-15T10:00:00Z',
+    sentBy: 2,
+    dueDate: '2025-09-25',
+    message: 'Monthly planning submission required for Marketing department.',
+    responses: []
+  },
+  {
+    id: 3,
+    departmentId: 4,
+    month: 10,
+    year: 2025,
+    status: 'overdue',
+    sentAt: '2025-09-10T10:00:00Z',
+    sentBy: 2,
+    dueDate: '2025-09-20',
+    message: 'Urgent: Please submit overdue planning numbers for Product department.',
+    responses: []
+  }
+];
+
+// Role-based permissions
+export const mockUserPermissions = {
+  'SuperAdmin': {
+    role: 'SuperAdmin',
+    canEditSystemMetadata: true,
+    canViewAllDepartments: true,
+    canEditAllPlanning: true,
+    canApproveAll: true,
+    canSendRequests: true,
+    canManageUsers: true,
+    departmentAccess: 'all'
+  },
+  'Admin': {
+    role: 'Admin',
+    canEditSystemMetadata: false,
+    canViewAllDepartments: true,
+    canEditAllPlanning: false,
+    canApproveAll: false,
+    canSendRequests: true,
+    canManageUsers: true,
+    departmentAccess: 'all'
+  },
+  'Creator': {
+    role: 'Creator',
+    canEditSystemMetadata: false,
+    canViewAllDepartments: false,
+    canEditAllPlanning: false,
+    canApproveAll: false,
+    canSendRequests: false,
+    canManageUsers: false,
+    canCreatePlan: true,
+    canSubmitActuals: true,
+    departmentAccess: 'own'
+  },
+  'Approver': {
+    role: 'Approver',
+    canEditSystemMetadata: false,
+    canViewAllDepartments: false,
+    canEditAllPlanning: false,
+    canApproveAll: false,
+    canSendRequests: false,
+    canManageUsers: false,
+    canApprovePlan: true,
+    canViewDepartmentData: true,
+    departmentAccess: 'own'
+  },
+  'User': {
+    role: 'User',
+    canEditSystemMetadata: false,
+    canViewAllDepartments: false,
+    canEditAllPlanning: false,
+    canApproveAll: false,
+    canSendRequests: false,
+    canManageUsers: false,
+    canViewPlan: true,
+    departmentAccess: 'own'
+  }
+};
+
 export const mockPlanningHistory = [
   {
     id: 1,
@@ -240,64 +581,53 @@ export const mockPlanningHistory = [
     day: 1,
     month: 9,
     year: 2025,
+    action: 'planned',
     oldValue: 6,
     newValue: 8,
-    changedBy: 'Admin User',
+    changedBy: 'Faustino Shields',
     changedAt: '2025-09-15T10:30:00Z',
     reason: 'Resource allocation update'
   },
   {
     id: 2,
-    employeeId: 2,
-    employeeName: 'Pat Schneider',
-    day: 3,
+    employeeId: 1,
+    employeeName: 'Faustino Shields',
+    day: 1,
     month: 9,
     year: 2025,
-    oldValue: 8,
-    newValue: 6,
-    changedBy: 'Manager User',
-    changedAt: '2025-09-15T09:15:00Z',
-    reason: 'Sick leave adjustment'
+    action: 'approved',
+    value: 8,
+    changedBy: 'Pat Schneider',
+    changedAt: '2025-09-15T11:00:00Z',
+    reason: 'Plan approved'
   },
   {
     id: 3,
-    employeeId: 3,
-    employeeName: 'Aliya Schinner',
-    day: 5,
+    employeeId: 8,
+    employeeName: 'Sarah Johnson',
+    day: 2,
     month: 9,
     year: 2025,
-    oldValue: 4,
-    newValue: 8,
-    changedBy: 'Admin User',
-    changedAt: '2025-09-14T16:45:00Z',
-    reason: 'Overtime approval'
+    action: 'rejected',
+    value: 9,
+    changedBy: 'Marie Renault',
+    changedAt: '2025-09-10T16:45:00Z',
+    reason: 'Exceeds budget allocation'
+  },
+  {
+    id: 4,
+    employeeId: 3,
+    employeeName: 'Aliya Schinner',
+    day: 2,
+    month: 9,
+    year: 2025,
+    action: 'submitted',
+    value: 7,
+    changedBy: 'Aliya Schinner',
+    changedAt: '2025-09-14T14:20:00Z',
+    reason: 'Monthly actual submission'
   }
 ];
-
-// Mock user permissions
-export const mockUserPermissions = {
-  'Administrator': {
-    role: 'Admin',
-    canEdit: true,
-    canDelete: true,
-    canViewAll: true,
-    departments: ['Engineering', 'Product', 'Design', 'People', 'Marketing']
-  },
-  'Manager': {
-    role: 'Manager',
-    canEdit: true,
-    canDelete: false,
-    canViewAll: false,
-    departments: ['Engineering', 'Product']
-  },
-  'User': {
-    role: 'User',
-    canEdit: false,
-    canDelete: false,
-    canViewAll: false,
-    departments: []
-  }
-};
 
 // Mock analytics data
 export const mockAnalyticsData = {
@@ -312,30 +642,30 @@ export const mockAnalyticsData = {
   ],
   departmentHours: [
     { label: 'Engineering', value: 2400 },
-    { label: 'Product', value: 1800 },
-    { label: 'Design', value: 1200 },
-    { label: 'Marketing', value: 800 },
-    { label: 'People', value: 600 }
+    { label: 'Marketing', value: 1800 },
+    { label: 'Sales', value: 1200 },
+    { label: 'Product', value: 800 },
+    { label: 'Finance', value: 600 }
   ],
   resourceDistribution: [
     { label: 'Development', value: 45, color: '#3b82f6' },
-    { label: 'Design', value: 25, color: '#10b981' },
-    { label: 'Management', value: 15, color: '#f59e0b' },
-    { label: 'Research', value: 10, color: '#ef4444' },
+    { label: 'Marketing', value: 25, color: '#10b981' },
+    { label: 'Sales', value: 15, color: '#f59e0b' },
+    { label: 'Product', value: 10, color: '#ef4444' },
     { label: 'Other', value: 5, color: '#8b5cf6' }
   ],
   topPerformers: [
     { name: 'Faustino Shields', department: 'Engineering', hours: 180, growth: 12 },
     { name: 'Aliya Schinner', department: 'Product', hours: 165, growth: 8 },
-    { name: 'Marie Renault', department: 'Design', hours: 152, growth: 15 },
+    { name: 'Sarah Johnson', department: 'Marketing', hours: 152, growth: 15 },
     { name: 'Luis Lopez', department: 'Engineering', hours: 148, growth: 5 },
-    { name: 'Sarah Johnson', department: 'Marketing', hours: 140, growth: 18 }
+    { name: 'Loraine Stracke', department: 'Finance', hours: 140, growth: 18 }
   ],
   recentActivity: [
-    { action: 'Planning updated for Engineering team', user: 'Admin User', time: '2 hours ago' },
-    { action: 'New employee added to Product department', user: 'HR Manager', time: '4 hours ago' },
-    { action: 'Weekly report generated', user: 'System', time: '6 hours ago' },
-    { action: 'Overtime approved for Design team', user: 'Project Manager', time: '8 hours ago' },
-    { action: 'Resource allocation optimized', user: 'Operations Lead', time: '1 day ago' }
+    { action: 'Plan approved for Engineering department', user: 'Pat Schneider', time: '2 hours ago' },
+    { action: 'Plan rejected for Marketing team', user: 'Marie Renault', time: '4 hours ago' },
+    { action: 'Monthly request sent to all departments', user: 'System Admin', time: '6 hours ago' },
+    { action: 'Planning numbers submitted by Product', user: 'Aliya Schinner', time: '8 hours ago' },
+    { action: 'New department created: Finance', user: 'Super Admin', time: '1 day ago' }
   ]
 };

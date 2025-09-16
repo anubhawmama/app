@@ -7,6 +7,8 @@ import Profile from "./components/Profile";
 import Notifications from "./components/Notifications";
 import Planning from "./components/Planning";
 import Analytics from "./components/Analytics";
+import SystemManagement from "./components/SystemManagement";
+import PlanningRequests from "./components/PlanningRequests";
 import { Toaster } from "./components/ui/toaster";
 
 // Auth Context
@@ -102,6 +104,16 @@ function App() {
             <Route path="/analytics" element={
               <ProtectedRoute>
                 <Analytics />
+              </ProtectedRoute>
+            } />
+            <Route path="/system-management" element={
+              <ProtectedRoute>
+                <SystemManagement />
+              </ProtectedRoute>
+            } />
+            <Route path="/planning-requests" element={
+              <ProtectedRoute>
+                <PlanningRequests />
               </ProtectedRoute>
             } />
             <Route path="/" element={<Navigate to="/dashboard" />} />
