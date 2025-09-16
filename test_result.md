@@ -318,7 +318,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Reports & Analytics Section"
+    - "Enhanced Planning System"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
