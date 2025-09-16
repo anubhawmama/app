@@ -174,6 +174,9 @@ const Dashboard = () => {
                 <User className="h-4 w-4 mr-2" />
                 {user?.name}
               </Button>
+              <Badge variant="outline" className="text-xs">
+                {user?.role}
+              </Badge>
               <Button
                 variant="ghost"
                 size="sm"
