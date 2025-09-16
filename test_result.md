@@ -279,9 +279,8 @@ metadata:
 
 test_plan:
   current_focus:
-    - "User Authentication & Authorization System"
-    - "Department Management API"
-    - "Backend Model Implementation"
+    - "Frontend Integration Testing"
+    - "End-to-End User Workflows"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
