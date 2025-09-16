@@ -18,31 +18,53 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const navigate = useNavigate();
+
+  // Clear error when component mounts or when user starts typing
+  useEffect(() => {
+    setError('');
+  }, []);
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
-    // Simulate API call delay
-    setTimeout(() => {
-      const user = mockUsers.find(
+    try {
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const foundUser = mockUsers.find(
         u => u.email === formData.email && u.password === formData.password
       );
 
-      if (user) {
-        login(user);
-        navigate('/dashboard');
+      if (foundUser) {
+        login(foundUser);
+        navigate('/dashboard', { replace: true });
       } else {
         setError('Invalid email or password');
       }
+    } catch (err) {
+      setError('An unexpected error occurred. Please try again.');
+      console.error('Login error:', err);
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   const handleChange = (e) => {
+    // Clear error when user starts typing
+    if (error) {
+      setError('');
+    }
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
