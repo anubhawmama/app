@@ -219,14 +219,16 @@ const Planning = () => {
   const getMonthTotal = (employeeId) => {
     return days.reduce((sum, day) => {
       const key = `${employeeId}-${day}`;
-      return sum + (planningData[key] || 0);
+      const planningEntry = planningData[key];
+      return sum + (planningEntry ? (planningEntry.planned || planningEntry.actual || 0) : 0);
     }, 0);
   };
 
   const getDayTotal = (day) => {
     return filteredEmployees.reduce((sum, emp) => {
       const key = `${emp.id}-${day}`;
-      return sum + (planningData[key] || 0);
+      const planningEntry = planningData[key];
+      return sum + (planningEntry ? (planningEntry.planned || planningEntry.actual || 0) : 0);
     }, 0);
   };
 
