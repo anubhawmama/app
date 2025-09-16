@@ -483,6 +483,173 @@ const SystemManagement = () => {
               </Card>
             </TabsContent>
           ))}
+          
+          {/* Users Tab - Special handling */}
+          <TabsContent value="users" className="space-y-6">
+            <Card className="shadow-lg">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Users className="h-5 w-5" />
+                      <span>Manage Users</span>
+                    </CardTitle>
+                    <CardDescription>
+                      Add, edit, or remove users and assign them to departments with roles
+                    </CardDescription>
+                  </div>
+                  <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+                    <DialogTrigger asChild>
+                      <Button className="bg-slate-900 hover:bg-slate-800">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add User
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Add New User</DialogTitle>
+                        <DialogDescription>
+                          Create a new user account and assign role and department
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div>
+                          <Label htmlFor="userName">Full Name</Label>
+                          <Input
+                            id="userName"
+                            value={newItem.name || ''}
+                            onChange={(e) => setNewItem({...newItem, name: e.target.value})}
+                            placeholder="Enter full name"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="userEmail">Email Address</Label>
+                          <Input
+                            id="userEmail"
+                            type="email"
+                            value={newItem.email || ''}
+                            onChange={(e) => setNewItem({...newItem, email: e.target.value})}
+                            placeholder="Enter email address"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="userRole">Role</Label>
+                          <Select 
+                            value={newItem.role || ''} 
+                            onValueChange={(value) => setNewItem({...newItem, role: value})}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select role" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="SuperAdmin">SuperAdmin</SelectItem>
+                              <SelectItem value="Admin">Admin</SelectItem>
+                              <SelectItem value="Creator">Creator</SelectItem>
+                              <SelectItem value="Approver">Approver</SelectItem>
+                              <SelectItem value="User">User</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label htmlFor="userDepartment">Department</Label>
+                          <Select 
+                            value={newItem.departmentId?.toString()} 
+                            onValueChange={(value) => setNewItem({...newItem, departmentId: parseInt(value)})}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select department" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {departments.map(dept => (
+                                <SelectItem key={dept.id} value={dept.id.toString()}>
+                                  {dept.name} - {dept.code}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label htmlFor="userPassword">Initial Password</Label>
+                          <Input
+                            id="userPassword"
+                            type="password"
+                            value={newItem.password || ''}
+                            onChange={(e) => setNewItem({...newItem, password: e.target.value})}
+                            placeholder="Enter initial password"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex justify-end space-x-2">
+                        <Button variant="outline" onClick={() => setShowAddDialog(false)}>
+                          Cancel
+                        </Button>
+                        <Button onClick={handleAdd}>
+                          Add User
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-slate-200">
+                        <th className="text-left py-3 px-4 font-medium text-slate-700">Name</th>
+                        <th className="text-left py-3 px-4 font-medium text-slate-700">Email</th>
+                        <th className="text-left py-3 px-4 font-medium text-slate-700">Role</th>
+                        <th className="text-left py-3 px-4 font-medium text-slate-700">Department</th>
+                        <th className="text-left py-3 px-4 font-medium text-slate-700">Status</th>
+                        <th className="text-left py-3 px-4 font-medium text-slate-700">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {users.map((userItem) => (
+                        <tr key={userItem.id} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                          <td className="py-3 px-4 font-medium text-slate-900">{userItem.name}</td>
+                          <td className="py-3 px-4 text-slate-600">{userItem.email}</td>
+                          <td className="py-3 px-4">
+                            <Badge variant={userItem.role === 'SuperAdmin' || userItem.role === 'Admin' ? 'default' : 'secondary'}>
+                              {userItem.role}
+                            </Badge>
+                          </td>
+                          <td className="py-3 px-4 text-slate-600">
+                            {departments.find(d => d.id === userItem.departmentId)?.name || 'N/A'}
+                          </td>
+                          <td className="py-3 px-4">
+                            <Badge variant={userItem.status === 'Active' ? 'default' : 'secondary'}>
+                              {userItem.status}
+                            </Badge>
+                          </td>
+                          <td className="py-3 px-4">
+                            <div className="flex items-center space-x-2">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => handleEdit(userItem)}
+                                className="h-8 w-8 p-0"
+                              >
+                                <Edit className="h-3 w-3" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => handleDelete(userItem.id)}
+                                className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
     </div>
