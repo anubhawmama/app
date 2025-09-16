@@ -23,7 +23,7 @@ import {
   X,
   Users
 } from 'lucide-react';
-import { mockDepartments, mockBrands, mockCategories, mockSubcategories, mockUserPermissions, mockTableData } from '../data/mockData';
+import { mockDepartments, mockBrands, mockCategories, mockSubcategories, mockUserPermissions, mockTableData, mockProducts } from '../data/mockData';
 import { toast } from '../hooks/use-toast';
 
 const SystemManagement = () => {
