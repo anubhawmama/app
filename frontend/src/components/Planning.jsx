@@ -156,7 +156,13 @@ const Planning = () => {
       
       setPendingChanges(prev => ({
         ...prev,
-        [editingCell]: newValue
+        [editingCell]: {
+          planned: newValue,
+          actual: oldValue,
+          status: 'pending',
+          submittedBy: user?.id || 1,
+          submittedAt: new Date().toISOString()
+        }
       }));
       
       // Add to history
