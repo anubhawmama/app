@@ -127,7 +127,8 @@ const Planning = () => {
     }
 
     const key = `${employeeId}-${day}`;
-    const currentValue = planningData[key] || 0;
+    const planningEntry = planningData[key];
+    const currentValue = planningEntry ? (planningEntry.planned || planningEntry.actual || 0) : 0;
     setEditingCell(key);
     setEditValue(currentValue.toString());
   };
