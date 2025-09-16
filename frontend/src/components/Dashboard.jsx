@@ -26,7 +26,7 @@ import {
   Calendar,
   BarChart3
 } from 'lucide-react';
-import { mockDashboardData, mockTableData, mockNotifications } from '../data/mockData';
+import { mockDashboardData, mockTableData, mockNotifications, mockUserPermissions } from '../data/mockData';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '../hooks/use-toast';
 
