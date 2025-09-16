@@ -20,7 +20,8 @@ import {
   Layers,
   Settings,
   Save,
-  X
+  X,
+  Users
 } from 'lucide-react';
 import { mockDepartments, mockBrands, mockCategories, mockSubcategories, mockUserPermissions } from '../data/mockData';
 import { toast } from '../hooks/use-toast';
