@@ -514,8 +514,203 @@ export const mockPlanningRequests = [
   }
 ];
 
-// Role-based permissions
-export const mockUserPermissions = {
+// Enhanced product/SKU management
+export const mockProducts = [
+  {
+    id: 1,
+    name: 'TechCorp Laptop Pro',
+    eanCode: '1234567890123',
+    categoryId: 1, // Software Development
+    subcategoryId: 1, // Frontend Development
+    brandId: 1, // TechCorp
+    mrp: 89999,
+    status: 'Active',
+    createdAt: '2024-01-15',
+    createdBy: 'Super Admin'
+  },
+  {
+    id: 2,
+    name: 'InnovateX Mobile App',
+    eanCode: '2345678901234',
+    categoryId: 1, // Software Development
+    subcategoryId: 3, // Mobile Development
+    brandId: 2, // InnovateX
+    mrp: 4999,
+    status: 'Active',
+    createdAt: '2024-01-20',
+    createdBy: 'Super Admin'
+  },
+  {
+    id: 3,
+    name: 'CloudFirst Analytics',
+    eanCode: '3456789012345',
+    categoryId: 2, // Digital Marketing
+    subcategoryId: 4, // Social Media Marketing
+    brandId: 3, // CloudFirst
+    mrp: 29999,
+    status: 'Active',
+    createdAt: '2024-02-01',
+    createdBy: 'Super Admin'
+  },
+  {
+    id: 4,
+    name: 'DataPro Dashboard',
+    eanCode: '4567890123456',
+    categoryId: 2, // Digital Marketing
+    subcategoryId: 5, // Content Marketing
+    brandId: 4, // DataPro
+    mrp: 19999,
+    status: 'Active',
+    createdAt: '2024-02-10',
+    createdBy: 'Super Admin'
+  },
+  {
+    id: 5,
+    name: 'TechCorp Support Suite',
+    eanCode: '5678901234567',
+    categoryId: 3, // Customer Support
+    subcategoryId: 6, // Email Support
+    brandId: 1, // TechCorp
+    mrp: 15999,
+    status: 'Active',
+    createdAt: '2024-02-15',
+    createdBy: 'Super Admin'
+  }
+];
+
+// Plans management
+export const mockPlans = [
+  {
+    id: 1,
+    name: 'Q1 2025 Sales Plan',
+    startDate: '2025-01-01',
+    endDate: '2025-03-31',
+    status: 'completed',
+    createdBy: 2, // Admin
+    createdAt: '2024-12-15',
+    description: 'First quarter sales planning for all departments'
+  },
+  {
+    id: 2,
+    name: 'Q2 2025 Product Launch',
+    startDate: '2025-04-01',
+    endDate: '2025-06-30',
+    status: 'in-progress',
+    createdBy: 2, // Admin
+    createdAt: '2025-03-01',
+    description: 'Product launch planning with marketing campaigns'
+  },
+  {
+    id: 3,
+    name: 'Annual Budget 2025',
+    startDate: '2025-01-01',
+    endDate: '2025-12-31',
+    status: 'started',
+    createdBy: 1, // SuperAdmin
+    createdAt: '2024-11-15',
+    description: 'Annual budget planning across all departments and products'
+  }
+];
+
+// SKU-level planning data
+export const mockSkuPlanningData = {
+  // Format: "planId-departmentId-productId": { planned: number, actual: number, status: string }
+  '1-1-1': { planned: 100, actual: 95, status: 'completed' }, // Q1 Plan - Engineering - TechCorp Laptop Pro
+  '1-1-2': { planned: 150, actual: 140, status: 'completed' }, // Q1 Plan - Engineering - InnovateX Mobile App
+  '1-2-3': { planned: 200, actual: 180, status: 'completed' }, // Q1 Plan - Marketing - CloudFirst Analytics  
+  '1-2-4': { planned: 300, actual: 320, status: 'completed' }, // Q1 Plan - Marketing - DataPro Dashboard
+  '1-3-5': { planned: 120, actual: 110, status: 'completed' }, // Q1 Plan - Sales - TechCorp Support Suite
+  
+  '2-1-1': { planned: 120, actual: 0, status: 'pending' }, // Q2 Plan - Engineering - TechCorp Laptop Pro
+  '2-1-2': { planned: 180, actual: 45, status: 'in-progress' }, // Q2 Plan - Engineering - InnovateX Mobile App
+  '2-2-3': { planned: 250, actual: 60, status: 'in-progress' }, // Q2 Plan - Marketing - CloudFirst Analytics
+  '2-2-4': { planned: 350, actual: 0, status: 'pending' }, // Q2 Plan - Marketing - DataPro Dashboard
+  '2-3-5': { planned: 140, actual: 35, status: 'in-progress' }, // Q2 Plan - Sales - TechCorp Support Suite
+  
+  '3-1-1': { planned: 500, actual: 125, status: 'in-progress' }, // Annual - Engineering - TechCorp Laptop Pro
+  '3-1-2': { planned: 600, actual: 150, status: 'in-progress' }, // Annual - Engineering - InnovateX Mobile App
+  '3-2-3': { planned: 800, actual: 200, status: 'in-progress' }, // Annual - Marketing - CloudFirst Analytics
+  '3-2-4': { planned: 1000, actual: 250, status: 'in-progress' }, // Annual - Marketing - DataPro Dashboard
+  '3-3-5': { planned: 400, actual: 100, status: 'in-progress' }, // Annual - Sales - TechCorp Support Suite
+};
+
+// Plan requests to departments
+export const mockPlanRequests = [
+  {
+    id: 1,
+    planId: 2,
+    departmentId: 1,
+    status: 'submitted',
+    requestedAt: '2025-03-01T10:00:00Z',
+    submittedAt: '2025-03-05T14:30:00Z',
+    submittedBy: 1, // Faustino (Creator)
+    message: 'Please submit your Q2 product planning numbers for all assigned SKUs.'
+  },
+  {
+    id: 2,
+    planId: 2,
+    departmentId: 2,
+    status: 'pending',
+    requestedAt: '2025-03-01T10:00:00Z',
+    submittedAt: null,
+    submittedBy: null,
+    message: 'Please submit your Q2 marketing planning numbers for all assigned SKUs.'
+  },
+  {
+    id: 3,
+    planId: 3,
+    departmentId: 1,
+    status: 'in-progress',
+    requestedAt: '2024-11-15T09:00:00Z',
+    submittedAt: null,
+    submittedBy: null,
+    message: 'Annual budget planning - please provide estimates for all products.'
+  }
+];
+
+// Configurable permissions for system metadata access
+export const mockSystemPermissions = {
+  'SuperAdmin': {
+    canViewDepartments: true,
+    canViewBrands: true,
+    canViewCategories: true,
+    canViewSubcategories: true,
+    canViewProducts: true,
+    canEditPermissions: true
+  },
+  'Admin': {
+    canViewDepartments: true,
+    canViewBrands: true,
+    canViewCategories: true,
+    canViewSubcategories: true,
+    canViewProducts: true,
+    canEditPermissions: false
+  },
+  'Creator': {
+    canViewDepartments: false,
+    canViewBrands: true,
+    canViewCategories: true,
+    canViewSubcategories: true,
+    canViewProducts: true,
+    canEditPermissions: false
+  },
+  'Approver': {
+    canViewDepartments: false,
+    canViewBrands: true,
+    canViewCategories: false,
+    canViewSubcategories: false,
+    canViewProducts: true,
+    canEditPermissions: false
+  },
+  'User': {
+    canViewDepartments: false,
+    canViewBrands: false,
+    canViewCategories: false,
+    canViewSubcategories: false,
+    canViewProducts: false,
+    canEditPermissions: false
+  }
+};
   'SuperAdmin': {
     role: 'SuperAdmin',
     canEditSystemMetadata: true,
