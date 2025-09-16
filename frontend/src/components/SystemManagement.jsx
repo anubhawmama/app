@@ -121,6 +121,11 @@ const SystemManagement = () => {
           item.id === id ? { ...item, ...updatedData } : item
         ));
         break;
+      case 'users':
+        setUsers(prev => prev.map(item => 
+          item.id === id ? { ...item, ...updatedData } : item
+        ));
+        break;
     }
     setEditingItem(null);
     toast({ title: "Success", description: "Item updated successfully" });
