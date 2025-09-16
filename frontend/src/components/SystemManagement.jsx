@@ -145,6 +145,9 @@ const SystemManagement = () => {
       case 'subcategories':
         setSubcategories(prev => prev.filter(item => item.id !== id));
         break;
+      case 'users':
+        setUsers(prev => prev.filter(item => item.id !== id));
+        break;
     }
     toast({ title: "Success", description: "Item deleted successfully" });
   };
