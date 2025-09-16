@@ -33,7 +33,7 @@ import {
   Building,
   ChevronDown
 } from 'lucide-react';
-import { mockPlanningData, mockEmployees, mockPlanningHistory, mockUserPermissions } from '../data/mockData';
+import { mockSkuPlanningData as mockPlanningData, mockEmployees, mockPlanningHistory, mockUserPermissions } from '../data/mockData';
 import { toast } from '../hooks/use-toast';
 
 const Planning = () => {
