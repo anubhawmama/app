@@ -146,7 +146,7 @@ const Reports = () => {
       const data = filteredData.map(item => template.columns.map(col => item[col] || '-'));
 
       // Add table
-      doc.autoTable({
+      autoTable(doc, {
         head: [headers],
         body: data,
         startY: 60,
@@ -155,7 +155,7 @@ const Reports = () => {
       });
 
       // Add summary
-      const finalY = doc.lastAutoTable.finalY + 20;
+      const finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY + 20 : 120;
       doc.setFontSize(14);
       doc.text('Summary', 20, finalY);
       doc.setFontSize(10);
