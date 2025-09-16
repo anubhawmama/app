@@ -10,6 +10,7 @@ import Analytics from "./components/Analytics";
 import SystemManagement from "./components/SystemManagement";
 import PlanningRequests from "./components/PlanningRequests";
 import PlanManagement from "./components/PlanManagement";
+import Reports from "./components/Reports";
 import NotFound from "./components/NotFound";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { Toaster } from "./components/ui/toaster";
