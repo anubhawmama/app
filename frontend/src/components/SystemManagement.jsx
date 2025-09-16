@@ -177,6 +177,12 @@ const SystemManagement = () => {
         icon: Layers,
         fields: ['name', 'code', 'categoryId', 'description'],
         color: 'orange'
+      },
+      users: {
+        title: 'Users',
+        icon: Users,
+        fields: ['name', 'email', 'role', 'departmentId'],
+        color: 'indigo'
       }
     };
     return configs[activeTab];
