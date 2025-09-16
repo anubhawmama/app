@@ -132,6 +132,11 @@ function App() {
                   <PlanManagement />
                 </ProtectedRoute>
               } />
+              <Route path="/reports" element={
+                <ProtectedRoute>
+                  <Reports />
+                </ProtectedRoute>
+              } />
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               {/* Catch-all route for 404 */}
               <Route path="*" element={<NotFound />} />
