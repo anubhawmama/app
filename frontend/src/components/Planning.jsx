@@ -526,7 +526,8 @@ const Planning = () => {
                     
                     {days.map(day => {
                       const key = `${employee.id}-${day}`;
-                      const value = planningData[key] || 0;
+                      const planningEntry = planningData[key];
+                      const value = planningEntry ? (planningEntry.planned || planningEntry.actual || 0) : 0;
                       const isEditing = editingCell === key;
                       const hasUnsavedChange = pendingChanges[key] !== undefined;
                       const canEdit = canEditCell(employee.id, day);
