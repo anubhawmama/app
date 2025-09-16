@@ -201,6 +201,9 @@ frontend:
       - working: true
         agent: "main"
         comment: "mockPlanningData export exists as alias to mockSkuPlanningData"
+      - working: true
+        agent: "main"
+        comment: "Added missing mockPlanningRequests export as alias to mockPlanRequests to fix import error"
 
 metadata:
   created_by: "main_agent"
