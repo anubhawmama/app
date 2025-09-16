@@ -41,6 +41,8 @@ const Dashboard = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  const userPermissions = mockUserPermissions[user?.role || 'User'];
+
   const unreadNotifications = mockNotifications.filter(n => !n.read).length;
 
   const handleLogout = () => {
