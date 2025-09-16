@@ -267,6 +267,27 @@ const Dashboard = () => {
               </CardContent>
             </Card>
 
+            <Card className="hover:shadow-lg transition-shadow duration-200 cursor-pointer" onClick={() => navigate('/reports')}>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Activity className="h-5 w-5 text-purple-600" />
+                  <span>Reports</span>
+                </CardTitle>
+                <CardDescription>Generate and export comprehensive business reports</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-2xl font-bold text-slate-900">8</div>
+                    <div className="text-sm text-slate-600">Report Types</div>
+                  </div>
+                  <Button size="sm">
+                    Generate Reports
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
             <Card className="hover:shadow-lg transition-shadow duration-200 cursor-pointer" onClick={() => navigate('/notifications')}>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
