@@ -140,11 +140,18 @@ const Planning = () => {
   const handleCellSave = () => {
     if (editingCell) {
       const newValue = parseInt(editValue) || 0;
-      const oldValue = planningData[editingCell] || 0;
+      const planningEntry = planningData[editingCell];
+      const oldValue = planningEntry ? (planningEntry.planned || planningEntry.actual || 0) : 0;
       
       setPlanningData(prev => ({
         ...prev,
-        [editingCell]: newValue
+        [editingCell]: {
+          planned: newValue,
+          actual: oldValue,
+          status: 'pending',
+          submittedBy: user?.id || 1,
+          submittedAt: new Date().toISOString()
+        }
       }));
       
       setPendingChanges(prev => ({
