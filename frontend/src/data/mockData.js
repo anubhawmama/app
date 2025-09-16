@@ -497,6 +497,9 @@ export const mockSkuPlanningData = {
 // Backward compatibility - alias for the old planning data
 export const mockPlanningData = mockSkuPlanningData;
 
+// Backward compatibility - alias for plan requests
+export const mockPlanningRequests = mockPlanRequests;
+
 // Plan requests to departments
 export const mockPlanRequests = [
   {
