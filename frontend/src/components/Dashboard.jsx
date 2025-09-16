@@ -132,7 +132,12 @@ const Dashboard = () => {
                 <Button
                   variant={item.active ? "default" : "ghost"}
                   className={`w-full justify-start ${item.active ? 'bg-slate-900 text-white' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'}`}
-                  onClick={() => item.path && navigate(item.path)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (item.path) {
+                      navigate(item.path);
+                    }
+                  }}
                 >
                   <item.icon className="mr-3 h-4 w-4" />
                   {item.label}
