@@ -711,7 +711,9 @@ export const mockSystemPermissions = {
     canEditPermissions: false
   }
 };
-  'SuperAdmin': {
+
+// Role-based permissions
+export const mockUserPermissions = {
     role: 'SuperAdmin',
     canEditSystemMetadata: true,
     canViewAllDepartments: true,
