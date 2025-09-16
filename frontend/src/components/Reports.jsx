@@ -31,7 +31,7 @@ import { mockReportData, mockReportSummary, reportTemplates } from '../data/mock
 import { mockDepartments, mockBrands, mockCategories, mockSubcategories, mockUserPermissions } from '../data/mockData';
 import { toast } from '../hooks/use-toast';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 
