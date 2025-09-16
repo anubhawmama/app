@@ -494,6 +494,9 @@ export const mockSkuPlanningData = {
   '3-3-5': { planned: 400, actual: 100, status: 'in-progress' }, // Annual - Sales - TechCorp Support Suite
 };
 
+// Backward compatibility - alias for the old planning data
+export const mockPlanningData = mockSkuPlanningData;
+
 // Plan requests to departments
 export const mockPlanRequests = [
   {
