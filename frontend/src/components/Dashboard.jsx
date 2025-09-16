@@ -105,7 +105,7 @@ const Dashboard = () => {
       { icon: Send, label: 'Planning Requests', active: false, path: '/planning-requests' }
     ] : []),
     { icon: Users, label: 'Users' },
-    { icon: Activity, label: 'Reports' },
+    { icon: Activity, label: 'Reports', active: false, path: '/reports' },
     { icon: Settings, label: 'Settings' },
   ];
 
