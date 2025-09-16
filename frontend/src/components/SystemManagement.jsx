@@ -34,6 +34,7 @@ const SystemManagement = () => {
   const [categories, setCategories] = useState(mockCategories);
   const [subcategories, setSubcategories] = useState(mockSubcategories);
   const [users, setUsers] = useState(mockTableData);
+  const [products, setProducts] = useState(mockProducts);
   const [editingItem, setEditingItem] = useState(null);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [activeTab, setActiveTab] = useState('departments');
