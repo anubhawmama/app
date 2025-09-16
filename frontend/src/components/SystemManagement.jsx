@@ -147,6 +147,7 @@ const SystemManagement = () => {
       case 'brands': return brands;
       case 'categories': return categories;
       case 'subcategories': return subcategories;
+      case 'users': return users;
       default: return [];
     }
   };
