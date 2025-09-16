@@ -126,8 +126,8 @@ export const mockTableData = [
 export const mockNotifications = [
   {
     id: 1,
-    title: 'Monthly Planning Request',
-    message: 'Please submit your department planning numbers for October 2025.',
+    title: 'New Planning Request',
+    message: 'Q2 2025 Product Launch planning request has been sent to your department.',
     type: 'info',
     timestamp: '2 hours ago',
     read: false,
@@ -155,8 +155,8 @@ export const mockNotifications = [
   },
   {
     id: 4,
-    title: 'System Update',
-    message: 'New brand categories have been added to the system.',
+    title: 'New Product Added',
+    message: 'TechCorp Laptop Pro has been added to the product catalog.',
     type: 'info',
     timestamp: '3 days ago',
     read: true,
@@ -165,7 +165,7 @@ export const mockNotifications = [
   {
     id: 5,
     title: 'Planning Deadline',
-    message: 'Reminder: Planning submission deadline is tomorrow.',
+    message: 'Reminder: Annual Budget 2025 planning submission deadline is tomorrow.',
     type: 'error',
     timestamp: '1 week ago',
     read: true,
@@ -374,146 +374,6 @@ export const mockSubcategories = [
   }
 ];
 
-// Enhanced employees with department relationships
-export const mockEmployees = [
-  {
-    id: 1,
-    name: 'Faustino Shields',
-    email: 'faustino@company.com',
-    departmentId: 1,
-    role: 'Creator',
-    avatar: '/api/placeholder/32/32'
-  },
-  {
-    id: 2,
-    name: 'Pat Schneider',
-    email: 'pat@company.com',
-    departmentId: 1,
-    role: 'Approver',
-    avatar: '/api/placeholder/32/32'
-  },
-  {
-    id: 3,
-    name: 'Aliya Schinner',
-    email: 'aliya@company.com',
-    departmentId: 4,
-    role: 'Creator',
-    avatar: '/api/placeholder/32/32'
-  },
-  {
-    id: 4,
-    name: 'Daan Aarden',
-    email: 'daan@company.com',
-    departmentId: 2,
-    role: 'User',
-    avatar: '/api/placeholder/32/32'
-  },
-  {
-    id: 5,
-    name: 'Marie Renault',
-    email: 'marie@company.com',
-    departmentId: 2,
-    role: 'Approver',
-    avatar: '/api/placeholder/32/32'
-  },
-  {
-    id: 6,
-    name: 'Loraine Stracke',
-    email: 'loraine@company.com',
-    departmentId: 5,
-    role: 'Creator',
-    avatar: '/api/placeholder/32/32'
-  },
-  {
-    id: 7,
-    name: 'Luis Lopez',
-    email: 'luis@company.com',
-    departmentId: 1,
-    role: 'User',
-    avatar: '/api/placeholder/32/32'
-  },
-  {
-    id: 8,
-    name: 'Sarah Johnson',
-    email: 'sarah@company.com',
-    departmentId: 2,
-    role: 'Creator',
-    avatar: '/api/placeholder/32/32'
-  },
-  {
-    id: 9,
-    name: 'Mike Chen',
-    email: 'mike@company.com',
-    departmentId: 1,
-    role: 'User',
-    avatar: '/api/placeholder/32/32'
-  },
-  {
-    id: 10,
-    name: 'Lisa Wong',
-    email: 'lisa@company.com',
-    departmentId: 4,
-    role: 'Approver',
-    avatar: '/api/placeholder/32/32'
-  }
-];
-
-// Enhanced planning data with approval status
-export const mockPlanningData = {
-  '1-1': { planned: 8, actual: 7, status: 'approved', approvedBy: 2, approvedAt: '2025-09-01' },
-  '1-2': { planned: 8, actual: 8, status: 'approved', approvedBy: 2, approvedAt: '2025-09-01' },
-  '1-3': { planned: 8, actual: 6, status: 'pending', submittedBy: 1, submittedAt: '2025-09-15' },
-  '2-1': { planned: 7, actual: 7, status: 'approved', approvedBy: 2, approvedAt: '2025-09-01' },
-  '2-2': { planned: 8, actual: 8, status: 'approved', approvedBy: 2, approvedAt: '2025-09-01' },
-  '3-1': { planned: 8, actual: 8, status: 'approved', approvedBy: 10, approvedAt: '2025-09-01' },
-  '3-2': { planned: 8, actual: 7, status: 'pending', submittedBy: 3, submittedAt: '2025-09-14' },
-  '8-1': { planned: 8, actual: 8, status: 'approved', approvedBy: 5, approvedAt: '2025-09-01' },
-  '8-2': { planned: 8, actual: 9, status: 'rejected', rejectedBy: 5, rejectedAt: '2025-09-10', reason: 'Exceeds budget allocation' },
-  // Add more planning data as needed
-};
-
-// Planning requests/intimations
-export const mockPlanningRequests = [
-  {
-    id: 1,
-    departmentId: 1,
-    month: 10,
-    year: 2025,
-    status: 'sent',
-    sentAt: '2025-09-15T10:00:00Z',
-    sentBy: 2, // Admin
-    dueDate: '2025-09-25',
-    message: 'Please submit your October planning numbers including actual September data.',
-    responses: [
-      { userId: 1, respondedAt: '2025-09-16T14:30:00Z', status: 'submitted' }
-    ]
-  },
-  {
-    id: 2,
-    departmentId: 2,
-    month: 10,
-    year: 2025,
-    status: 'pending',
-    sentAt: '2025-09-15T10:00:00Z',
-    sentBy: 2,
-    dueDate: '2025-09-25',
-    message: 'Monthly planning submission required for Marketing department.',
-    responses: []
-  },
-  {
-    id: 3,
-    departmentId: 4,
-    month: 10,
-    year: 2025,
-    status: 'overdue',
-    sentAt: '2025-09-10T10:00:00Z',
-    sentBy: 2,
-    dueDate: '2025-09-20',
-    message: 'Urgent: Please submit overdue planning numbers for Product department.',
-    responses: []
-  }
-];
-
 // Enhanced product/SKU management
 export const mockProducts = [
   {
@@ -712,8 +572,93 @@ export const mockSystemPermissions = {
   }
 };
 
+// Enhanced employees with department relationships
+export const mockEmployees = [
+  {
+    id: 1,
+    name: 'Faustino Shields',
+    email: 'faustino@company.com',
+    departmentId: 1,
+    role: 'Creator',
+    avatar: '/api/placeholder/32/32'
+  },
+  {
+    id: 2,
+    name: 'Pat Schneider',
+    email: 'pat@company.com',
+    departmentId: 1,
+    role: 'Approver',
+    avatar: '/api/placeholder/32/32'
+  },
+  {
+    id: 3,
+    name: 'Aliya Schinner',
+    email: 'aliya@company.com',
+    departmentId: 4,
+    role: 'Creator',
+    avatar: '/api/placeholder/32/32'
+  },
+  {
+    id: 4,
+    name: 'Daan Aarden',
+    email: 'daan@company.com',
+    departmentId: 2,
+    role: 'User',
+    avatar: '/api/placeholder/32/32'
+  },
+  {
+    id: 5,
+    name: 'Marie Renault',
+    email: 'marie@company.com',
+    departmentId: 2,
+    role: 'Approver',
+    avatar: '/api/placeholder/32/32'
+  },
+  {
+    id: 6,
+    name: 'Loraine Stracke',
+    email: 'loraine@company.com',
+    departmentId: 5,
+    role: 'Creator',
+    avatar: '/api/placeholder/32/32'
+  },
+  {
+    id: 7,
+    name: 'Luis Lopez',
+    email: 'luis@company.com',
+    departmentId: 1,
+    role: 'User',
+    avatar: '/api/placeholder/32/32'
+  },
+  {
+    id: 8,
+    name: 'Sarah Johnson',
+    email: 'sarah@company.com',
+    departmentId: 2,
+    role: 'Creator',
+    avatar: '/api/placeholder/32/32'
+  },
+  {
+    id: 9,
+    name: 'Mike Chen',
+    email: 'mike@company.com',
+    departmentId: 1,
+    role: 'User',
+    avatar: '/api/placeholder/32/32'
+  },
+  {
+    id: 10,
+    name: 'Lisa Wong',
+    email: 'lisa@company.com',
+    departmentId: 4,
+    role: 'Approver',
+    avatar: '/api/placeholder/32/32'
+  }
+];
+
 // Role-based permissions
 export const mockUserPermissions = {
+  'SuperAdmin': {
     role: 'SuperAdmin',
     canEditSystemMetadata: true,
     canViewAllDepartments: true,
@@ -721,6 +666,7 @@ export const mockUserPermissions = {
     canApproveAll: true,
     canSendRequests: true,
     canManageUsers: true,
+    canCreatePlans: true,
     departmentAccess: 'all'
   },
   'Admin': {
@@ -731,6 +677,7 @@ export const mockUserPermissions = {
     canApproveAll: false,
     canSendRequests: true,
     canManageUsers: true,
+    canCreatePlans: true,
     departmentAccess: 'all'
   },
   'Creator': {
@@ -741,6 +688,7 @@ export const mockUserPermissions = {
     canApproveAll: false,
     canSendRequests: false,
     canManageUsers: false,
+    canCreatePlans: false,
     canCreatePlan: true,
     canSubmitActuals: true,
     departmentAccess: 'own'
@@ -753,6 +701,7 @@ export const mockUserPermissions = {
     canApproveAll: false,
     canSendRequests: false,
     canManageUsers: false,
+    canCreatePlans: false,
     canApprovePlan: true,
     canViewDepartmentData: true,
     departmentAccess: 'own'
@@ -765,6 +714,7 @@ export const mockUserPermissions = {
     canApproveAll: false,
     canSendRequests: false,
     canManageUsers: false,
+    canCreatePlans: false,
     canViewPlan: true,
     departmentAccess: 'own'
   }
