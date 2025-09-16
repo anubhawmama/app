@@ -10,6 +10,8 @@ import Analytics from "./components/Analytics";
 import SystemManagement from "./components/SystemManagement";
 import PlanningRequests from "./components/PlanningRequests";
 import PlanManagement from "./components/PlanManagement";
+import NotFound from "./components/NotFound";
+import ErrorBoundary from "./components/ErrorBoundary";
 import { Toaster } from "./components/ui/toaster";
 
 // Auth Context
@@ -31,7 +33,13 @@ const AuthProvider = ({ children }) => {
     // Check for stored auth
     const storedUser = localStorage.getItem('adminUser');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        // Clear corrupted auth data
+        localStorage.removeItem('adminUser');
+        console.warn('Corrupted auth data cleared');
+      }
     }
     setLoading(false);
   }, []);
@@ -72,61 +80,65 @@ const ProtectedRoute = ({ children }) => {
     );
   }
   
-  return user ? children : <Navigate to="/login" />;
+  return user ? children : <Navigate to="/login" replace />;
 };
 
 function App() {
   return (
     <div className="App">
-      <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } />
-            <Route path="/profile" element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            } />
-            <Route path="/notifications" element={
-              <ProtectedRoute>
-                <Notifications />
-              </ProtectedRoute>
-            } />
-            <Route path="/planning" element={
-              <ProtectedRoute>
-                <Planning />
-              </ProtectedRoute>
-            } />
-            <Route path="/analytics" element={
-              <ProtectedRoute>
-                <Analytics />
-              </ProtectedRoute>
-            } />
-            <Route path="/system-management" element={
-              <ProtectedRoute>
-                <SystemManagement />
-              </ProtectedRoute>
-            } />
-            <Route path="/planning-requests" element={
-              <ProtectedRoute>
-                <PlanningRequests />
-              </ProtectedRoute>
-            } />
-            <Route path="/plan-management" element={
-              <ProtectedRoute>
-                <PlanManagement />
-              </ProtectedRoute>
-            } />
-            <Route path="/" element={<Navigate to="/dashboard" />} />
-          </Routes>
-        </BrowserRouter>
-        <Toaster />
-      </AuthProvider>
+      <ErrorBoundary>
+        <AuthProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              } />
+              <Route path="/notifications" element={
+                <ProtectedRoute>
+                  <Notifications />
+                </ProtectedRoute>
+              } />
+              <Route path="/planning" element={
+                <ProtectedRoute>
+                  <Planning />
+                </ProtectedRoute>
+              } />
+              <Route path="/analytics" element={
+                <ProtectedRoute>
+                  <Analytics />
+                </ProtectedRoute>
+              } />
+              <Route path="/system-management" element={
+                <ProtectedRoute>
+                  <SystemManagement />
+                </ProtectedRoute>
+              } />
+              <Route path="/planning-requests" element={
+                <ProtectedRoute>
+                  <PlanningRequests />
+                </ProtectedRoute>
+              } />
+              <Route path="/plan-management" element={
+                <ProtectedRoute>
+                  <PlanManagement />
+                </ProtectedRoute>
+              } />
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              {/* Catch-all route for 404 */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+          <Toaster />
+        </AuthProvider>
+      </ErrorBoundary>
     </div>
   );
 }
