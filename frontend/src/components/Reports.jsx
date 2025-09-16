@@ -1,0 +1,575 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../App';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
+import { Badge } from './ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Label } from './ui/label';
+import { 
+  ArrowLeft, 
+  Download, 
+  FileSpreadsheet, 
+  FileText,
+  Calendar,
+  Filter,
+  TrendingUp,
+  TrendingDown,
+  BarChart3,
+  PieChart,
+  Target,
+  Users,
+  Building,
+  Package,
+  Search,
+  RefreshCw
+} from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, PieChart as RechartsPieChart, Cell, AreaChart, Area } from 'recharts';
+import { mockReportData, mockReportSummary, reportTemplates } from '../data/mockReportData';
+import { mockDepartments, mockBrands, mockCategories, mockSubcategories, mockUserPermissions } from '../data/mockData';
+import { toast } from '../hooks/use-toast';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+
+const Reports = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [selectedReportType, setSelectedReportType] = useState('brand');
+  const [selectedPeriod, setSelectedPeriod] = useState('monthly');
+  const [selectedTimeframe, setSelectedTimeframe] = useState('2025-01');
+  const [reportData, setReportData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+
+  // Color palette for charts
+  const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#84cc16', '#f97316'];
+
+  // Get user permissions for reports
+  const userPermissions = mockUserPermissions[user?.role] || {};
+  const canViewAllReports = user?.role === 'SuperAdmin' || user?.role === 'Admin';
+
+  useEffect(() => {
+    loadReportData();
+  }, [selectedReportType, selectedPeriod, selectedTimeframe]);
+
+  const loadReportData = () => {
+    setLoading(true);
+    try {
+      const data = mockReportData[`${selectedReportType}Reports`]?.[selectedPeriod]?.[selectedTimeframe] || [];
+      
+      // Filter data based on user permissions if needed
+      let filteredData = data;
+      if (!canViewAllReports && user?.departmentId) {
+        // Filter to show only user's department data if applicable
+        if (selectedReportType === 'department') {
+          filteredData = data.filter(item => item.departmentId === user.departmentId);
+        }
+      }
+      
+      setReportData(filteredData);
+    } catch (error) {
+      console.error('Error loading report data:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load report data",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getTimeframeOptions = () => {
+    switch (selectedPeriod) {
+      case 'monthly':
+        return [
+          { value: '2025-01', label: 'January 2025' },
+          { value: '2025-02', label: 'February 2025' },
+          { value: '2025-03', label: 'March 2025' }
+        ];
+      case 'quarterly':
+        return [
+          { value: 'Q1-2025', label: 'Q1 2025' },
+          { value: 'Q4-2024', label: 'Q4 2024' }
+        ];
+      case 'yearly':
+        return [
+          { value: '2024', label: '2024' },
+          { value: '2023', label: '2023' }
+        ];
+      default:
+        return [];
+    }
+  };
+
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+
+    const sortedData = [...reportData].sort((a, b) => {
+      if (a[key] < b[key]) return direction === 'asc' ? -1 : 1;
+      if (a[key] > b[key]) return direction === 'asc' ? 1 : -1;
+      return 0;
+    });
+    setReportData(sortedData);
+  };
+
+  const filteredData = reportData.filter(item => {
+    if (!searchTerm) return true;
+    const searchableFields = Object.values(item).join(' ').toLowerCase();
+    return searchableFields.includes(searchTerm.toLowerCase());
+  });
+
+  const exportToPDF = () => {
+    try {
+      const doc = new jsPDF();
+      const template = reportTemplates[selectedReportType];
+      
+      // Add header
+      doc.setFontSize(20);
+      doc.text(template.name, 20, 20);
+      doc.setFontSize(12);
+      doc.text(`Period: ${selectedPeriod} - ${selectedTimeframe}`, 20, 30);
+      doc.text(`Generated: ${new Date().toLocaleDateString()}`, 20, 40);
+      doc.text(`Generated by: ${user?.name}`, 20, 50);
+
+      // Prepare table data
+      const headers = template.columns.map(col => col.charAt(0).toUpperCase() + col.slice(1));
+      const data = filteredData.map(item => template.columns.map(col => item[col] || '-'));
+
+      // Add table
+      doc.autoTable({
+        head: [headers],
+        body: data,
+        startY: 60,
+        styles: { fontSize: 10 },
+        headStyles: { fillColor: [59, 130, 246] }
+      });
+
+      // Add summary
+      const finalY = doc.lastAutoTable.finalY + 20;
+      doc.setFontSize(14);
+      doc.text('Summary', 20, finalY);
+      doc.setFontSize(10);
+      
+      const totalPlanned = filteredData.reduce((sum, item) => sum + (item.planned || 0), 0);
+      const totalActual = filteredData.reduce((sum, item) => sum + (item.actual || 0), 0);
+      const totalVariance = totalActual - totalPlanned;
+      
+      doc.text(`Total Planned: ${totalPlanned.toLocaleString()}`, 20, finalY + 10);
+      doc.text(`Total Actual: ${totalActual.toLocaleString()}`, 20, finalY + 20);
+      doc.text(`Total Variance: ${totalVariance.toLocaleString()}`, 20, finalY + 30);
+      doc.text(`Completion Rate: ${((totalActual / totalPlanned) * 100).toFixed(1)}%`, 20, finalY + 40);
+
+      doc.save(`${selectedReportType}-report-${selectedTimeframe}.pdf`);
+      
+      toast({
+        title: "Success",
+        description: "Report exported to PDF successfully"
+      });
+    } catch (error) {
+      console.error('PDF export error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to export PDF",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const exportToExcel = () => {
+    try {
+      const template = reportTemplates[selectedReportType];
+      
+      // Create workbook and worksheet
+      const workbook = XLSX.utils.book_new();
+      
+      // Main data sheet
+      const worksheet = XLSX.utils.json_to_sheet(filteredData);
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Report Data');
+      
+      // Summary sheet
+      const totalPlanned = filteredData.reduce((sum, item) => sum + (item.planned || 0), 0);
+      const totalActual = filteredData.reduce((sum, item) => sum + (item.actual || 0), 0);
+      const totalVariance = totalActual - totalPlanned;
+      
+      const summary = [
+        { Metric: 'Total Planned', Value: totalPlanned },
+        { Metric: 'Total Actual', Value: totalActual },
+        { Metric: 'Total Variance', Value: totalVariance },
+        { Metric: 'Completion Rate (%)', Value: ((totalActual / totalPlanned) * 100).toFixed(1) },
+        { Metric: 'Report Type', Value: template.name },
+        { Metric: 'Period', Value: `${selectedPeriod} - ${selectedTimeframe}` },
+        { Metric: 'Generated Date', Value: new Date().toLocaleDateString() },
+        { Metric: 'Generated By', Value: user?.name }
+      ];
+      
+      const summarySheet = XLSX.utils.json_to_sheet(summary);
+      XLSX.utils.book_append_sheet(workbook, summarySheet, 'Summary');
+      
+      // Export file
+      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      saveAs(blob, `${selectedReportType}-report-${selectedTimeframe}.xlsx`);
+      
+      toast({
+        title: "Success",
+        description: "Report exported to Excel successfully"
+      });
+    } catch (error) {
+      console.error('Excel export error:', error);
+      toast({
+        title: "Error", 
+        description: "Failed to export Excel",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const renderChart = () => {
+    if (!filteredData.length) return null;
+
+    const chartData = filteredData.map(item => ({
+      name: item[selectedReportType] || item.name,
+      planned: item.planned || 0,
+      actual: item.actual || 0,
+      variance: item.variance || 0
+    }));
+
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        {/* Bar Chart */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BarChart3 className="w-5 h-5" />
+              Planned vs Actual
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="planned" fill="#3b82f6" name="Planned" />
+                <Bar dataKey="actual" fill="#10b981" name="Actual" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        {/* Line Chart */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="w-5 h-5" />
+              Performance Trend
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="actual" stroke="#10b981" strokeWidth={2} name="Actual Performance" />
+                <Line type="monotone" dataKey="planned" stroke="#3b82f6" strokeWidth={2} name="Planned Target" />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  };
+
+  const renderSummaryCards = () => {
+    if (!filteredData.length) return null;
+
+    const totalPlanned = filteredData.reduce((sum, item) => sum + (item.planned || 0), 0);
+    const totalActual = filteredData.reduce((sum, item) => sum + (item.actual || 0), 0);
+    const totalVariance = totalActual - totalPlanned;
+    const completionRate = totalPlanned > 0 ? ((totalActual / totalPlanned) * 100) : 0;
+
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <Card>
+          <CardContent className="flex items-center p-6">
+            <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg">
+              <Target className="w-6 h-6 text-blue-600" />
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600">Total Planned</p>
+              <p className="text-2xl font-bold text-gray-900">{totalPlanned.toLocaleString()}</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="flex items-center p-6">
+            <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
+              <TrendingUp className="w-6 h-6 text-green-600" />
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600">Total Actual</p>
+              <p className="text-2xl font-bold text-gray-900">{totalActual.toLocaleString()}</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="flex items-center p-6">
+            <div className={`flex items-center justify-center w-12 h-12 rounded-lg ${
+              totalVariance >= 0 ? 'bg-green-100' : 'bg-red-100'
+            }`}>
+              {totalVariance >= 0 ? 
+                <TrendingUp className="w-6 h-6 text-green-600" /> : 
+                <TrendingDown className="w-6 h-6 text-red-600" />
+              }
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600">Variance</p>
+              <p className={`text-2xl font-bold ${totalVariance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                {totalVariance > 0 ? '+' : ''}{totalVariance.toLocaleString()}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="flex items-center p-6">
+            <div className={`flex items-center justify-center w-12 h-12 rounded-lg ${
+              completionRate >= 100 ? 'bg-green-100' : 'bg-yellow-100'
+            }`}>
+              <PieChart className={`w-6 h-6 ${completionRate >= 100 ? 'text-green-600' : 'text-yellow-600'}`} />
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600">Completion Rate</p>
+              <p className={`text-2xl font-bold ${completionRate >= 100 ? 'text-green-600' : 'text-yellow-600'}`}>
+                {completionRate.toFixed(1)}%
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  };
+
+  const renderDataTable = () => {
+    if (!filteredData.length) {
+      return (
+        <Card>
+          <CardContent className="flex items-center justify-center h-64">
+            <div className="text-center">
+              <Package className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-500">No data available for the selected criteria</p>
+            </div>
+          </CardContent>
+        </Card>
+      );
+    }
+
+    const template = reportTemplates[selectedReportType];
+    
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Report Data</CardTitle>
+          <CardDescription>
+            Detailed {template.name.toLowerCase()} for {selectedPeriod} period
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="border-b">
+                  {template.columns.map(column => (
+                    <th 
+                      key={column}
+                      className="text-left p-3 font-medium text-gray-700 cursor-pointer hover:bg-gray-50"
+                      onClick={() => handleSort(column)}
+                    >
+                      <div className="flex items-center gap-2">
+                        {column.charAt(0).toUpperCase() + column.slice(1)}
+                        {sortConfig.key === column && (
+                          <span className="text-xs">
+                            {sortConfig.direction === 'asc' ? '↑' : '↓'}
+                          </span>
+                        )}
+                      </div>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {filteredData.map((item, index) => (
+                  <tr key={index} className="border-b hover:bg-gray-50">
+                    {template.columns.map(column => (
+                      <td key={column} className="p-3">
+                        {column === 'variance' ? (
+                          <Badge variant={item[column] >= 0 ? 'default' : 'destructive'}>
+                            {item[column] > 0 ? '+' : ''}{item[column]}
+                          </Badge>
+                        ) : typeof item[column] === 'number' ? (
+                          item[column].toLocaleString()
+                        ) : (
+                          item[column] || '-'
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/dashboard')}
+                className="mr-4"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Dashboard
+              </Button>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">Reports & Analytics</h1>
+                <p className="text-sm text-gray-600">Generate and export comprehensive business reports</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Filters */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Filter className="w-5 h-5" />
+              Report Configuration
+            </CardTitle>
+            <CardDescription>
+              Select report type, time period, and export options
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+              <div>
+                <Label htmlFor="reportType">Report Type</Label>
+                <Select value={selectedReportType} onValueChange={setSelectedReportType}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select report type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="brand">Brand Performance</SelectItem>
+                    <SelectItem value="category">Category Analysis</SelectItem>
+                    <SelectItem value="department">Department Performance</SelectItem>
+                    <SelectItem value="subcategory">Subcategory Details</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="period">Time Period</Label>
+                <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select period" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="monthly">Monthly</SelectItem>
+                    <SelectItem value="quarterly">Quarterly</SelectItem>
+                    <SelectItem value="yearly">Yearly</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="timeframe">Timeframe</Label>
+                <Select value={selectedTimeframe} onValueChange={setSelectedTimeframe}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select timeframe" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {getTimeframeOptions().map(option => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="search">Search</Label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Input
+                    placeholder="Search reports..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <Button onClick={loadReportData} disabled={loading}>
+                <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                {loading ? 'Loading...' : 'Refresh Data'}
+              </Button>
+              
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={exportToPDF}>
+                  <FileText className="w-4 h-4 mr-2" />
+                  Export PDF
+                </Button>
+                <Button variant="outline" onClick={exportToExcel}>
+                  <FileSpreadsheet className="w-4 h-4 mr-2" />
+                  Export Excel
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Summary Cards */}
+        {renderSummaryCards()}
+
+        {/* Charts */}
+        {renderChart()}
+
+        {/* Data Table */}
+        {renderDataTable()}
+      </div>
+    </div>
+  );
+};
+
+export default Reports;
