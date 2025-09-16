@@ -39,8 +39,8 @@ const SystemManagement = () => {
   const [activeTab, setActiveTab] = useState('departments');
   const [newItem, setNewItem] = useState({});
 
-  const userPermissions = mockUserPermissions[user?.role || 'User'];
-  const canEdit = userPermissions.canEditSystemMetadata;
+  const userPermissions = mockUserPermissions[user?.role] || mockUserPermissions['User'] || {};
+  const canEdit = userPermissions.canEditSystemMetadata || userPermissions.canManageUsers;
 
   if (!canEdit) {
     return (
