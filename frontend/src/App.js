@@ -117,6 +117,11 @@ function App() {
                 <PlanningRequests />
               </ProtectedRoute>
             } />
+            <Route path="/plan-management" element={
+              <ProtectedRoute>
+                <PlanManagement />
+              </ProtectedRoute>
+            } />
             <Route path="/" element={<Navigate to="/dashboard" />} />
           </Routes>
         </BrowserRouter>
