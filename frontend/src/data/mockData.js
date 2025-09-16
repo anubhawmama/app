@@ -531,6 +531,9 @@ export const mockPlanRequests = [
   }
 ];
 
+// Backward compatibility - alias for plan requests
+export const mockPlanningRequests = mockPlanRequests;
+
 // Configurable permissions for system metadata access
 export const mockSystemPermissions = {
   'SuperAdmin': {
