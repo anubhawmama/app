@@ -270,6 +270,9 @@ frontend:
       - working: true
         agent: "main"
         comment: "Added missing mockPlanningRequests export as alias to mockPlanRequests to fix import error"
+      - working: true
+        agent: "main"
+        comment: "Fixed JavaScript declaration order issue - moved mockPlanningRequests alias after mockPlanRequests definition. Frontend now loads without errors."
 
 metadata:
   created_by: "main_agent"
