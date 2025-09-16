@@ -41,7 +41,11 @@ const Dashboard = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  const userPermissions = mockUserPermissions[user?.role || 'User'];
+  const userPermissions = mockUserPermissions[user?.role] || mockUserPermissions['User'] || {
+    canEditSystemMetadata: false,
+    canSendRequests: false,
+    canViewAllDepartments: false
+  };
 
   const unreadNotifications = mockNotifications.filter(n => !n.read).length;
 
