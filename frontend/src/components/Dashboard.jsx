@@ -95,6 +95,9 @@ const Dashboard = () => {
     { icon: Home, label: 'Dashboard', active: true, path: '/dashboard' },
     { icon: Calendar, label: 'Planning', active: false, path: '/planning' },
     { icon: BarChart3, label: 'Analytics', active: false, path: '/analytics' },
+    ...(userPermissions.canCreatePlans ? [
+      { icon: ClipboardList, label: 'Plan Management', active: false, path: '/plan-management' }
+    ] : []),
     ...(userPermissions.canEditSystemMetadata ? [
       { icon: Shield, label: 'System Management', active: false, path: '/system-management' }
     ] : []),
