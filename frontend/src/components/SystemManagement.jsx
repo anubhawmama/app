@@ -85,6 +85,9 @@ const SystemManagement = () => {
       case 'subcategories':
         setSubcategories(prev => [...prev, itemData]);
         break;
+      case 'users':
+        setUsers(prev => [...prev, itemData]);
+        break;
     }
 
     setNewItem({});
