@@ -90,6 +90,12 @@ const Dashboard = () => {
     { icon: Home, label: 'Dashboard', active: true, path: '/dashboard' },
     { icon: Calendar, label: 'Planning', active: false, path: '/planning' },
     { icon: BarChart3, label: 'Analytics', active: false, path: '/analytics' },
+    ...(userPermissions.canEditSystemMetadata ? [
+      { icon: Shield, label: 'System Management', active: false, path: '/system-management' }
+    ] : []),
+    ...(userPermissions.canSendRequests ? [
+      { icon: Send, label: 'Planning Requests', active: false, path: '/planning-requests' }
+    ] : []),
     { icon: Users, label: 'Users' },
     { icon: Activity, label: 'Reports' },
     { icon: Settings, label: 'Settings' },
