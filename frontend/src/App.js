@@ -9,6 +9,7 @@ import Planning from "./components/Planning";
 import Analytics from "./components/Analytics";
 import SystemManagement from "./components/SystemManagement";
 import PlanningRequests from "./components/PlanningRequests";
+import PlanManagement from "./components/PlanManagement";
 import { Toaster } from "./components/ui/toaster";
 
 // Auth Context
