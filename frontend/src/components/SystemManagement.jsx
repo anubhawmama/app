@@ -370,125 +370,136 @@ const SystemManagement = () => {
             </TabsTrigger>
           </TabsList>
 
-          {['departments', 'brands', 'categories', 'subcategories'].map(tab => (
-            <TabsContent key={tab} value={tab} className="space-y-6">
-              <Card className="shadow-lg">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle className="flex items-center space-x-2">
-                        <config.icon className="h-5 w-5" />
-                        <span>Manage {config.title}</span>
-                      </CardTitle>
-                      <CardDescription>
-                        Add, edit, or remove {config.title.toLowerCase()} in the system
-                      </CardDescription>
-                    </div>
-                    <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
-                      <DialogTrigger asChild>
-                        <Button className="bg-slate-900 hover:bg-slate-800">
-                          <Plus className="h-4 w-4 mr-2" />
-                          Add {config.title.slice(0, -1)}
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Add New {config.title.slice(0, -1)}</DialogTitle>
-                          <DialogDescription>
-                            Create a new {config.title.toLowerCase().slice(0, -1)} in the system
-                          </DialogDescription>
-                        </DialogHeader>
-                        <div className="space-y-4">
-                          <div>
-                            <Label htmlFor="name">Name</Label>
-                            <Input
-                              id="name"
-                              value={newItem.name || ''}
-                              onChange={(e) => setNewItem({...newItem, name: e.target.value})}
-                              placeholder="Enter name"
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="code">Code</Label>
-                            <Input
-                              id="code"
-                              value={newItem.code || ''}
-                              onChange={(e) => setNewItem({...newItem, code: e.target.value})}
-                              placeholder="Enter code"
-                            />
-                          </div>
-                          {tab === 'subcategories' && (
-                            <div>
-                              <Label htmlFor="category">Category</Label>
-                              <Select 
-                                value={newItem.categoryId?.toString()} 
-                                onValueChange={(value) => setNewItem({...newItem, categoryId: parseInt(value)})}
-                              >
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select category" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {categories.map(cat => (
-                                    <SelectItem key={cat.id} value={cat.id.toString()}>
-                                      {cat.name}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          )}
-                          <div>
-                            <Label htmlFor="description">Description</Label>
-                            <Textarea
-                              id="description"
-                              value={newItem.description || ''}
-                              onChange={(e) => setNewItem({...newItem, description: e.target.value})}
-                              placeholder="Enter description"
-                            />
-                          </div>
-                        </div>
-                        <div className="flex justify-end space-x-2">
-                          <Button variant="outline" onClick={() => setShowAddDialog(false)}>
-                            Cancel
-                          </Button>
-                          <Button onClick={handleAdd}>
+          {/* Departments, Categories, Subcategories - Standard tabs */}
+          {['departments', 'categories', 'subcategories'].map(tab => {
+            const config = getTabConfig(tab);
+            const data = getData(tab);
+            
+            return (
+              <TabsContent key={tab} value={tab} className="space-y-6">
+                <Card className="shadow-lg">
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle className="flex items-center space-x-2">
+                          <config.icon className="h-5 w-5" />
+                          <span>Manage {config.title}</span>
+                        </CardTitle>
+                        <CardDescription>
+                          Add, edit, or remove {config.title.toLowerCase()} in the system
+                        </CardDescription>
+                      </div>
+                      <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+                        <DialogTrigger asChild>
+                          <Button className="bg-slate-900 hover:bg-slate-800">
+                            <Plus className="h-4 w-4 mr-2" />
                             Add {config.title.slice(0, -1)}
                           </Button>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-b border-slate-200">
-                          <th className="text-left py-3 px-4 font-medium text-slate-700">Name</th>
-                          <th className="text-left py-3 px-4 font-medium text-slate-700">Code</th>
-                          {tab === 'subcategories' && (
-                            <th className="text-left py-3 px-4 font-medium text-slate-700">Category</th>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Add New {config.title.slice(0, -1)}</DialogTitle>
+                            <DialogDescription>
+                              Create a new {config.title.toLowerCase().slice(0, -1)} in the system
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="space-y-4">
+                            <div>
+                              <Label htmlFor="name">Name</Label>
+                              <Input
+                                id="name"
+                                value={newItem.name || ''}
+                                onChange={(e) => setNewItem({...newItem, name: e.target.value})}
+                                placeholder="Enter name"
+                              />
+                            </div>
+                            <div>
+                              <Label htmlFor="code">Code</Label>
+                              <Input
+                                id="code"
+                                value={newItem.code || ''}
+                                onChange={(e) => setNewItem({...newItem, code: e.target.value})}
+                                placeholder="Enter code"
+                              />
+                            </div>
+                            {tab === 'subcategories' && (
+                              <div>
+                                <Label htmlFor="category">Category</Label>
+                                <Select 
+                                  value={newItem.categoryId?.toString()} 
+                                  onValueChange={(value) => setNewItem({...newItem, categoryId: parseInt(value)})}
+                                >
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select category" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {categories.map(cat => (
+                                      <SelectItem key={cat.id} value={cat.id.toString()}>
+                                        {cat.name}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            )}
+                            <div>
+                              <Label htmlFor="description">Description</Label>
+                              <Textarea
+                                id="description"
+                                value={newItem.description || ''}
+                                onChange={(e) => setNewItem({...newItem, description: e.target.value})}
+                                placeholder="Enter description"
+                              />
+                            </div>
+                          </div>
+                          <div className="flex justify-end space-x-2">
+                            <Button variant="outline" onClick={() => setShowAddDialog(false)}>
+                              Cancel
+                            </Button>
+                            <Button onClick={handleAdd}>
+                              Add {config.title.slice(0, -1)}
+                            </Button>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b border-slate-200">
+                            <th className="text-left py-3 px-4 font-medium text-slate-700">Name</th>
+                            <th className="text-left py-3 px-4 font-medium text-slate-700">Code</th>
+                            {tab === 'subcategories' && (
+                              <th className="text-left py-3 px-4 font-medium text-slate-700">Category</th>
+                            )}
+                            <th className="text-left py-3 px-4 font-medium text-slate-700">Description</th>
+                            <th className="text-left py-3 px-4 font-medium text-slate-700">Status</th>
+                            <th className="text-left py-3 px-4 font-medium text-slate-700">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {data.map((item) => 
+                            editingItem === item.id ? (
+                              <EditableRow key={item.id} item={item} />
+                            ) : (
+                              <RegularRow key={item.id} item={item} />
+                            )
                           )}
-                          <th className="text-left py-3 px-4 font-medium text-slate-700">Description</th>
-                          <th className="text-left py-3 px-4 font-medium text-slate-700">Status</th>
-                          <th className="text-left py-3 px-4 font-medium text-slate-700">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {data.map((item) => 
-                          editingItem === item.id ? (
-                            <EditableRow key={item.id} item={item} />
-                          ) : (
-                            <RegularRow key={item.id} item={item} />
-                          )
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            );
+          })}
+
+          {/* Brands Tab - API Integration */}
+          <TabsContent value="brands" className="space-y-6">
+            <BrandsManagement />
+          </TabsContent>
           
           {/* Users Tab - Special handling */}
           <TabsContent value="users" className="space-y-6">
