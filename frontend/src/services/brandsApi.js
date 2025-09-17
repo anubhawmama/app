@@ -33,7 +33,7 @@ class BrandsApiService {
     try {
       const response = await fetch(`${BASE_URL}/brands`, {
         method: 'GET',
-        ...API_CONFIG
+        ...getApiConfig()
       });
       
       if (!response.ok) {
