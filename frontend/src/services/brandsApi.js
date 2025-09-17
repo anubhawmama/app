@@ -58,7 +58,7 @@ class BrandsApiService {
     try {
       const response = await fetch(`${BASE_URL}/brands`, {
         method: 'POST',
-        ...API_CONFIG,
+        ...getApiConfig(),
         body: JSON.stringify(brandData)
       });
       
@@ -80,7 +80,7 @@ class BrandsApiService {
     try {
       const response = await fetch(`${BASE_URL}/brands/${brandId}`, {
         method: 'PUT',
-        ...API_CONFIG,
+        ...getApiConfig(),
         body: JSON.stringify(brandData)
       });
       
@@ -102,7 +102,7 @@ class BrandsApiService {
     try {
       const response = await fetch(`${BASE_URL}/brands/${brandId}`, {
         method: 'DELETE',
-        ...API_CONFIG
+        ...getApiConfig()
       });
       
       if (!response.ok) {
