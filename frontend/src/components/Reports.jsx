@@ -29,6 +29,7 @@ import {
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, PieChart as RechartsPieChart, Cell, AreaChart, Area } from 'recharts';
 import { mockReportData, mockReportSummary, reportTemplates } from '../data/mockReportData';
 import { mockDepartments, mockBrands, mockCategories, mockSubcategories, mockUserPermissions } from '../data/mockData';
+import { PageLoader, TableLoader, LoadingSpinner, GridSkeleton, CardSkeleton, ChartSkeleton } from './ui/loading';
 import { toast } from '../hooks/use-toast';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
