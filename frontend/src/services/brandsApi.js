@@ -1,15 +1,30 @@
 // Brands API service
-// Note: Update the BASE_URL when ready to connect to your actual API
-const BASE_URL = process.env.REACT_APP_BACKEND_URL || 'https://your-api.com/api';
+const BASE_URL = process.env.REACT_APP_BACKEND_URL + '/api' || 'https://your-api.com/api';
 
-// API configuration
-const API_CONFIG = {
-  headers: {
-    'Content-Type': 'application/json',
-    // Add authentication headers here when needed
-    // 'Authorization': 'Bearer your-token',
-    // 'X-API-Key': 'your-api-key'
+// Helper function to get auth token
+const getAuthToken = () => {
+  const user = localStorage.getItem('adminUser');
+  if (user) {
+    try {
+      const userData = JSON.parse(user);
+      return userData.token;
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+      return null;
+    }
   }
+  return null;
+};
+
+// API configuration with dynamic auth headers
+const getApiConfig = () => {
+  const token = getAuthToken();
+  return {
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token && { 'Authorization': `Bearer ${token}` })
+    }
+  };
 };
 
 class BrandsApiService {
