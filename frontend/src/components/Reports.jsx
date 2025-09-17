@@ -43,7 +43,11 @@ const Reports = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('monthly');
   const [selectedTimeframe, setSelectedTimeframe] = useState('2025-01');
   const [reportData, setReportData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [dataLoading, setDataLoading] = useState(false);
+  const [chartsLoading, setChartsLoading] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
