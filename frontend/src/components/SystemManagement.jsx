@@ -372,8 +372,17 @@ const SystemManagement = () => {
 
           {/* Departments, Categories, Subcategories - Standard tabs */}
           {['departments', 'categories', 'subcategories'].map(tab => {
-            const config = getTabConfig(tab);
-            const data = getData(tab);
+            // Get config for current tab
+            const configs = {
+              departments: { title: 'Departments', icon: Building2 },
+              categories: { title: 'Categories', icon: Layers },
+              subcategories: { title: 'Subcategories', icon: Layers }
+            };
+            const config = configs[tab];
+            
+            // Get data for current tab
+            const data = tab === 'departments' ? departments : 
+                        tab === 'categories' ? categories : subcategories;
             
             return (
               <TabsContent key={tab} value={tab} className="space-y-6">
