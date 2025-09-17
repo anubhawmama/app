@@ -90,17 +90,24 @@ class DepartmentCreate(BaseModel):
 
 class Brand(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    brand_id: Optional[str] = None  # User's API field
     name: str
-    code: str
     description: str
+    short_name: str  # User's API field
+    sap_division_code: str  # User's API field
+    article_type: str  # User's API field
+    merchandise_code: str  # User's API field
     status: str = "Active"
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     created_by: str
 
 class BrandCreate(BaseModel):
     name: str
-    code: str
     description: str
+    short_name: str
+    sap_division_code: str
+    article_type: str
+    merchandise_code: str
 
 class Category(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
