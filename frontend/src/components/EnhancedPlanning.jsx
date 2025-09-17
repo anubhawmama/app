@@ -40,6 +40,7 @@ import {
 import { mockHierarchicalPlanningData, mockPlanningWorkflow, consolidateDataByBrand, consolidateDataByCategory, consolidateDataByDepartment } from '../data/mockPlanningData';
 import { mockPlans } from '../data/mockData';
 import { mockDepartments, mockBrands, mockCategories, mockSubcategories, mockProducts, mockUserPermissions } from '../data/mockData';
+import { PageLoader, TableLoader, LoadingSpinner, GridSkeleton, CardSkeleton } from './ui/loading';
 import { toast } from '../hooks/use-toast';
 
 const EnhancedPlanning = () => {
@@ -56,7 +57,10 @@ const EnhancedPlanning = () => {
   const [showConsolidated, setShowConsolidated] = useState(false);
   const [pendingChanges, setPendingChanges] = useState({});
   const [planningData, setPlanningData] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [dataLoading, setDataLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   // Get user permissions
   const userPermissions = mockUserPermissions[user?.role] || {};
@@ -75,38 +79,96 @@ const EnhancedPlanning = () => {
   ];
 
   useEffect(() => {
-    // Auto-select user's department if they're not admin
-    if (!canEditAll && userDepartmentId) {
-      setSelectedDepartment(userDepartmentId.toString());
-    }
-    
-    // Auto-select first active plan
-    if (mockPlans.length > 0) {
-      const activePlan = mockPlans.find(p => p.status === 'in-progress') || mockPlans[0];
-      setSelectedPlan(activePlan.id.toString());
-    }
-  }, [canEditAll, userDepartmentId]);
+    initializeComponent();
+  }, []);
 
   useEffect(() => {
-    loadPlanningData();
+    if (selectedPlan && selectedDepartment) {
+      loadPlanningData();
+    }
   }, [selectedPlan, selectedDepartment]);
 
-  const loadPlanningData = () => {
+  const initializeComponent = async () => {
+    setLoading(true);
+    try {
+      // Simulate initial loading
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Auto-select user's department if they're not admin
+      if (!canEditAll && userDepartmentId) {
+        setSelectedDepartment(userDepartmentId.toString());
+      }
+      
+      // Auto-select first active plan
+      if (mockPlans.length > 0) {
+        const activePlan = mockPlans.find(p => p.status === 'in-progress') || mockPlans[0];
+        setSelectedPlan(activePlan.id.toString());
+      }
+    } catch (error) {
+      console.error('Error initializing component:', error);
+      toast({
+        title: "Error",
+        description: "Failed to initialize planning component",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadPlanningData = async () => {
     if (!selectedPlan || !selectedDepartment) return;
     
-    setLoading(true);
-    // Load monthly planning data for selected plan and department
-    const data = mockHierarchicalPlanningData.monthlyPlanningData;
-    const filteredData = {};
-    
-    Object.keys(data).forEach(key => {
-      if (key.startsWith(`${selectedPlan}-${selectedDepartment}-`)) {
-        filteredData[key] = data[key];
-      }
-    });
-    
-    setPlanningData(filteredData);
-    setLoading(false);
+    setDataLoading(true);
+    try {
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1200));
+      
+      // Load monthly planning data for selected plan and department
+      const data = mockHierarchicalPlanningData.monthlyPlanningData;
+      const filteredData = {};
+      
+      Object.keys(data).forEach(key => {
+        if (key.startsWith(`${selectedPlan}-${selectedDepartment}-`)) {
+          filteredData[key] = data[key];
+        }
+      });
+      
+      setPlanningData(filteredData);
+      
+      toast({
+        title: "Success",
+        description: "Planning data loaded successfully"
+      });
+    } catch (error) {
+      console.error('Error loading planning data:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load planning data",
+        variant: "destructive"
+      });
+    } finally {
+      setDataLoading(false);
+    }
+  };
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await loadPlanningData();
+      toast({
+        title: "Success",
+        description: "Planning data refreshed successfully"
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to refresh planning data",
+        variant: "destructive"
+      });
+    } finally {
+      setRefreshing(false);
+    }
   };
 
   const getAssignedBrands = () => {
@@ -204,24 +266,36 @@ const EnhancedPlanning = () => {
       return;
     }
 
-    setLoading(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Clear pending changes
-    setPendingChanges({});
-    
-    toast({
-      title: "Success",
-      description: `${Object.keys(pendingChanges).length} changes saved successfully`
-    });
-    
-    setLoading(false);
+    setSaving(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Clear pending changes
+      setPendingChanges({});
+      
+      toast({
+        title: "Success",
+        description: `${Object.keys(pendingChanges).length} changes saved successfully`
+      });
+    } catch (error) {
+      console.error('Error saving changes:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save changes",
+        variant: "destructive"
+      });
+    } finally {
+      setSaving(false);
+    }
   };
 
   const renderBrandView = () => {
     const assignedBrands = getAssignedBrands();
+    
+    if (dataLoading) {
+      return <TableLoader message="Loading planning data..." />;
+    }
     
     return (
       <div className="space-y-4">
@@ -383,6 +457,15 @@ const EnhancedPlanning = () => {
     const departmentTotals = consolidateDataByDepartment(selectedPlan, selectedDepartment);
     const assignedBrands = getAssignedBrands();
     
+    if (dataLoading) {
+      return (
+        <div className="space-y-6">
+          <CardSkeleton />
+          <CardSkeleton />
+        </div>
+      );
+    }
+    
     return (
       <div className="space-y-6">
         {/* Department Summary */}
@@ -471,6 +554,10 @@ const EnhancedPlanning = () => {
     );
   };
 
+  if (loading) {
+    return <PageLoader message="Loading Enhanced Planning..." />;
+  }
+
   if (!selectedPlan || (!canEditAll && !selectedDepartment)) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -520,9 +607,29 @@ const EnhancedPlanning = () => {
                   {Object.keys(pendingChanges).length} pending changes
                 </Badge>
               )}
-              <Button onClick={savePendingChanges} disabled={loading || Object.keys(pendingChanges).length === 0}>
-                <Save className="w-4 h-4 mr-2" />
-                Save Changes
+              <Button 
+                variant="outline" 
+                onClick={handleRefresh} 
+                disabled={refreshing || dataLoading}
+              >
+                <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+                {refreshing ? 'Refreshing...' : 'Refresh'}
+              </Button>
+              <Button 
+                onClick={savePendingChanges} 
+                disabled={saving || Object.keys(pendingChanges).length === 0}
+              >
+                {saving ? (
+                  <>
+                    <LoadingSpinner size="sm" />
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-4 h-4 mr-2" />
+                    Save Changes
+                  </>
+                )}
               </Button>
             </div>
           </div>
@@ -607,8 +714,13 @@ const EnhancedPlanning = () => {
               <div>
                 <Label>Actions</Label>
                 <div className="flex space-x-2">
-                  <Button variant="outline" size="sm" onClick={loadPlanningData}>
-                    <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={loadPlanningData}
+                    disabled={dataLoading}
+                  >
+                    <RefreshCw className={`w-4 h-4 ${dataLoading ? 'animate-spin' : ''}`} />
                   </Button>
                 </div>
               </div>
@@ -648,20 +760,7 @@ const EnhancedPlanning = () => {
         )}
 
         {/* Planning Data */}
-        {loading ? (
-          <Card>
-            <CardContent className="flex items-center justify-center h-64">
-              <div className="text-center">
-                <RefreshCw className="w-8 h-8 animate-spin text-blue-500 mx-auto mb-4" />
-                <p className="text-gray-600">Loading planning data...</p>
-              </div>
-            </CardContent>
-          </Card>
-        ) : selectedView === 'consolidated' ? (
-          renderConsolidatedView()
-        ) : (
-          renderBrandView()
-        )}
+        {selectedView === 'consolidated' ? renderConsolidatedView() : renderBrandView()}
       </div>
     </div>
   );
