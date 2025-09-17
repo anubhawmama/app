@@ -405,7 +405,9 @@ async def create_brand(brand: BrandCreate, current_user: UserResponse = Depends(
         raise HTTPException(status_code=403, detail="Not enough permissions")
     
     brand_dict = brand.dict()
-    brand_dict["id"] = str(uuid.uuid4())
+    brand_id = str(uuid.uuid4())
+    brand_dict["id"] = brand_id
+    brand_dict["brand_id"] = brand_id  # Set brand_id same as id for API compatibility
     brand_dict["created_by"] = current_user.id
     brand_dict["created_at"] = datetime.now(timezone.utc).isoformat()
     
