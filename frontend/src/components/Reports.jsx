@@ -59,12 +59,42 @@ const Reports = () => {
   const canViewAllReports = user?.role === 'SuperAdmin' || user?.role === 'Admin';
 
   useEffect(() => {
+    initializeReports();
+  }, []);
+
+  useEffect(() => {
     loadReportData();
   }, [selectedReportType, selectedPeriod, selectedTimeframe]);
 
-  const loadReportData = () => {
+  const initializeReports = async () => {
     setLoading(true);
     try {
+      // Simulate initial loading
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      toast({
+        title: "Success",
+        description: "Reports module initialized successfully"
+      });
+    } catch (error) {
+      console.error('Error initializing reports:', error);
+      toast({
+        title: "Error", 
+        description: "Failed to initialize reports module",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadReportData = async () => {
+    setDataLoading(true);
+    setChartsLoading(true);
+    try {
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1200));
+      
       const data = mockReportData[`${selectedReportType}Reports`]?.[selectedPeriod]?.[selectedTimeframe] || [];
       
       // Filter data based on user permissions if needed
@@ -77,6 +107,11 @@ const Reports = () => {
       }
       
       setReportData(filteredData);
+      setChartsLoading(false);
+      
+      // Additional delay for data processing
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
     } catch (error) {
       console.error('Error loading report data:', error);
       toast({
@@ -85,7 +120,7 @@ const Reports = () => {
         variant: "destructive"
       });
     } finally {
-      setLoading(false);
+      setDataLoading(false);
     }
   };
 
