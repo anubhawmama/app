@@ -145,7 +145,7 @@ export const validateBrandData = (brandData) => {
 export const formatBrandForDisplay = (brand) => {
   return {
     id: brand.brand_id || brand.id,
-    brand_id: brand.brand_id,
+    brand_id: brand.brand_id || brand.id,
     name: brand.name || '',
     description: brand.description || '',
     short_name: brand.short_name || '',
