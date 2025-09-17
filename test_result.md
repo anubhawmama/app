@@ -339,9 +339,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "API-Integrated Brands Management System"
+    []
   stuck_tasks:
-    - "API-Integrated Brands Management System"
+    []
   test_all: false
   test_priority: "high_first"
 
