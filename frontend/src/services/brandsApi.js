@@ -1,6 +1,6 @@
 // Brands API service
 // Note: Update the BASE_URL when ready to connect to your actual API
-const BASE_URL = 'https://your-api.com/api';
+const BASE_URL = process.env.REACT_APP_BACKEND_URL || 'https://your-api.com/api';
 
 // API configuration
 const API_CONFIG = {
