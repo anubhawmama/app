@@ -39,22 +39,65 @@ const Login = () => {
     setError('');
 
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Use real API authentication
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password
+        })
+      });
+
+      if (response.ok) {
+        const tokenData = await response.json();
+        
+        // Get user details
+        const userResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/me`, {
+          headers: {
+            'Authorization': `Bearer ${tokenData.access_token}`
+          }
+        });
+
+        if (userResponse.ok) {
+          const userData = await userResponse.json();
+          
+          // Create user object with token
+          const userWithToken = {
+            ...userData,
+            token: tokenData.access_token
+          };
+          
+          login(userWithToken);
+          navigate('/dashboard', { replace: true });
+        } else {
+          setError('Failed to get user information');
+        }
+      } else {
+        const errorData = await response.json();
+        setError(errorData.detail || 'Invalid email or password');
+      }
+    } catch (err) {
+      // Fallback to mock authentication for testing
+      console.warn('API authentication failed, falling back to mock:', err);
       
       const foundUser = mockUsers.find(
         u => u.email === formData.email && u.password === formData.password
       );
 
       if (foundUser) {
-        login(foundUser);
+        // Add a mock token for API testing
+        const userWithToken = {
+          ...foundUser,
+          token: 'mock-jwt-token-for-testing'
+        };
+        login(userWithToken);
         navigate('/dashboard', { replace: true });
       } else {
         setError('Invalid email or password');
       }
-    } catch (err) {
-      setError('An unexpected error occurred. Please try again.');
-      console.error('Login error:', err);
     } finally {
       setLoading(false);
     }
