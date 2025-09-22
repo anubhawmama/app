@@ -478,6 +478,7 @@ async def check_session(request: Request):
     except Exception as e:
         print(f"Session check error: {e}")
         return {"authenticated": False}
+# Traditional Authentication Routes
 @api_router.post("/auth/login", response_model=Token)
 async def login(user_credentials: UserLogin):
     user = await db.users.find_one({"email": user_credentials.email})
