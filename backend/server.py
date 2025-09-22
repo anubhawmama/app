@@ -235,6 +235,22 @@ class NotificationCreate(BaseModel):
     department_id: Optional[str] = None
     user_id: Optional[str] = None
 
+# Google OAuth Session Models
+class GoogleAuthUser(BaseModel):
+    id: str
+    email: str
+    name: str
+    picture: str
+    session_token: str
+
+class UserSession(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    session_token: str
+    expires_at: datetime
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    is_active: bool = True
+
 # Utility functions
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
