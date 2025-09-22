@@ -351,7 +351,7 @@ metadata:
 
 test_plan:
   current_focus:
-    []
+    - "Google Sign-In Integration"
   stuck_tasks:
     []
   test_all: false
