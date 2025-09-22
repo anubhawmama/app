@@ -51,9 +51,23 @@ const AuthProvider = ({ children }) => {
     localStorage.setItem('adminUser', JSON.stringify(userData));
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('adminUser');
+  const logout = async () => {
+    try {
+      // Call backend logout to cleanup session
+      await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/logout`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      // Always clear local state regardless of backend call result
+      setUser(null);
+      localStorage.removeItem('adminUser');
+    }
   };
 
   const value = {
