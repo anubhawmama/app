@@ -106,18 +106,47 @@ const Notifications = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showSettings, setShowSettings] = useState(false);
 
-  const getIcon = (type) => {
+  const getNotificationIcon = (type) => {
     switch (type) {
       case 'success':
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
+        return <CheckCircle className="w-5 h-5 text-green-500" />;
       case 'warning':
-        return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
+        return <AlertTriangle className="w-5 h-5 text-yellow-500" />;
       case 'error':
-        return <AlertCircle className="h-5 w-5 text-red-500" />;
+        return <AlertCircle className="w-5 h-5 text-red-500" />;
       default:
-        return <Info className="h-5 w-5 text-blue-500" />;
+        return <Info className="w-5 h-5 text-blue-500" />;
     }
   };
+
+  const getPriorityBadge = (priority) => {
+    const variants = {
+      low: 'bg-gray-100 text-gray-800',
+      medium: 'bg-blue-100 text-blue-800',
+      high: 'bg-red-100 text-red-800'
+    };
+    return (
+      <Badge className={variants[priority]} variant="outline">
+        {priority.charAt(0).toUpperCase() + priority.slice(1)}
+      </Badge>
+    );
+  };
+
+  const filteredNotifications = notifications.filter(notification => {
+    const matchesFilter = filter === 'all' || 
+                         (filter === 'unread' && !notification.read) ||
+                         (filter === 'read' && notification.read) ||
+                         (filter === 'action' && notification.actionRequired) ||
+                         notification.category === filter;
+
+    const matchesSearch = notification.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         notification.message.toLowerCase().includes(searchTerm.toLowerCase());
+
+    return matchesFilter && matchesSearch;
+  });
+
+  const unreadCount = notifications.filter(n => !n.read).length;
+  const actionRequiredCount = notifications.filter(n => n.actionRequired && !n.read).length;
 
   const getBadgeVariant = (type) => {
     switch (type) {
