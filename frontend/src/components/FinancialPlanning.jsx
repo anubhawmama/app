@@ -497,7 +497,7 @@ const FinancialPlanning = () => {
                     <SelectValue placeholder="All brands" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Brands</SelectItem>
+                    <SelectItem value="all">All Brands</SelectItem>
                     {brands.map(brand => (
                       <SelectItem key={brand.id} value={brand.id.toString()}>
                         {brand.name}
