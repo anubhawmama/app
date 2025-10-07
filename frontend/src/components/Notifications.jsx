@@ -30,8 +30,81 @@ import { toast } from '../hooks/use-toast';
 
 const Notifications = () => {
   const navigate = useNavigate();
-  const [notifications, setNotifications] = useState(mockNotifications);
+  const { user } = useAuth();
+  
+  // Mock notifications data
+  const [notifications, setNotifications] = useState([
+    {
+      id: 1,
+      type: 'info',
+      title: 'Planning Request Submitted',
+      message: 'Your Q2 2025 planning request has been submitted successfully.',
+      timestamp: '2025-03-15T14:30:00Z',
+      read: false,
+      priority: 'medium',
+      category: 'planning',
+      actionRequired: false
+    },
+    {
+      id: 2,
+      type: 'warning',
+      title: 'Deadline Reminder',
+      message: 'Planning submission deadline is approaching. Please submit your March planning by end of day.',
+      timestamp: '2025-03-15T09:00:00Z',
+      read: false,
+      priority: 'high',
+      category: 'deadline',
+      actionRequired: true
+    },
+    {
+      id: 3,
+      type: 'success',
+      title: 'Permission Updated',
+      message: 'Your permissions have been updated. You now have access to the Reports section.',
+      timestamp: '2025-03-14T16:45:00Z',
+      read: true,
+      priority: 'low',
+      category: 'system',
+      actionRequired: false
+    },
+    {
+      id: 4,
+      type: 'error',
+      title: 'System Maintenance',
+      message: 'Scheduled maintenance will occur tonight from 11 PM to 2 AM. Plan accordingly.',
+      timestamp: '2025-03-14T12:20:00Z',
+      read: false,
+      priority: 'high',
+      category: 'system',
+      actionRequired: false
+    },
+    {
+      id: 5,
+      type: 'info',
+      title: 'New Feature Available',
+      message: 'Financial Planning module is now available. Check it out in the Planning section.',
+      timestamp: '2025-03-13T11:15:00Z',
+      read: true,
+      priority: 'medium',
+      category: 'feature',
+      actionRequired: false
+    },
+    {
+      id: 6,
+      type: 'warning',
+      title: 'Data Sync Issue',
+      message: 'Some planning data may not be up to date. Please refresh and try again.',
+      timestamp: '2025-03-13T08:30:00Z',
+      read: false,
+      priority: 'medium',
+      category: 'system',
+      actionRequired: true
+    }
+  ]);
+
   const [filter, setFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showSettings, setShowSettings] = useState(false);
 
   const getIcon = (type) => {
     switch (type) {
