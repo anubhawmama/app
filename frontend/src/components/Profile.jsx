@@ -30,7 +30,8 @@ import {
   Calendar,
   Clock,
   UserCheck,
-  Activity
+  Activity,
+  ArrowLeft
 } from 'lucide-react';
 import { toast } from '../hooks/use-toast';
 
