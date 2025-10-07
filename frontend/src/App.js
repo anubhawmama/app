@@ -13,6 +13,7 @@ import SystemManagement from "./components/SystemManagement";
 import PlanningRequests from "./components/PlanningRequests";
 import PlanManagement from "./components/PlanManagement";
 import Reports from "./components/Reports";
+import Permission from "./components/Permission";
 import NotFound from "./components/NotFound";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { Toaster } from "./components/ui/toaster";
