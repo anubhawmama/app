@@ -588,7 +588,7 @@ const Reports = () => {
         {/* Data Table */}
         {renderDataTable()}
       </div>
-    </div>
+    </AppLayout>
   );
 };
 
