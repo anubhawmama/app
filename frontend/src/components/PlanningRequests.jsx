@@ -363,7 +363,7 @@ const PlanningRequests = () => {
                               </Avatar>
                             );
                           })}
-                          {request.responses.length > 3 && (
+                          {request.responses && request.responses.length > 3 && (
                             <div className="h-6 w-6 bg-slate-300 rounded-full border-2 border-white flex items-center justify-center text-xs">
                               +{request.responses.length - 3}
                             </div>
