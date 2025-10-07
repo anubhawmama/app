@@ -35,17 +35,33 @@ import {
 import { toast } from '../hooks/use-toast';
 
 const Profile = () => {
-  const { user } = useAuth();
   const navigate = useNavigate();
-  const [isEditing, setIsEditing] = useState(false);
+  const { user, logout } = useAuth();
+  
+  // Profile form state
   const [profileData, setProfileData] = useState({
-    name: user?.name || 'Admin User',
+    name: user?.name || 'System Admin',
     email: user?.email || 'admin@demo.com',
     phone: '+1 (555) 123-4567',
-    location: 'New York, NY',
-    bio: 'System Administrator with 5+ years of experience managing enterprise applications.',
-    department: 'IT Operations',
-    joinDate: '2019-03-15'
+    location: 'New York, USA',
+    department: 'Administration',
+    title: 'System Administrator',
+    bio: 'Experienced system administrator with expertise in planning systems and user management.',
+    joinDate: '2023-01-15',
+    avatar: user?.avatar || null
+  });
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false);
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [showPasswords, setShowPasswords] = useState({
+    current: false,
+    new: false,
+    confirm: false
   });
 
   const handleSave = () => {
