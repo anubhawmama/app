@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../App';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -7,16 +6,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Badge } from './ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Label } from './ui/label';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { 
-  ArrowLeft, 
   ChevronDown,
   ChevronRight,
   Save,
   FileText,
-  Building,
   Calendar,
   User,
-  RefreshCw
+  Filter,
+  History,
+  Search
 } from 'lucide-react';
 import { 
   departments, 
@@ -29,51 +29,70 @@ import {
   calculateQuarterlyTotals,
   financialUsers
 } from '../data/financialPlanningData';
-import { PageLoader, LoadingSpinner } from './ui/loading';
+import { LoadingSpinner } from './ui/loading';
 import { toast } from '../hooks/use-toast';
 
 const FinancialPlanning = () => {
-  const navigate = useNavigate();
   const { user } = useAuth();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState('1'); // Q1 2025 Marketing Plan
+  const [selectedDepartment, setSelectedDepartment] = useState('1'); // Marketing
+  const [selectedBrand, setSelectedBrand] = useState(''); // All brands
+  const [selectedMonth, setSelectedMonth] = useState(''); // All months
+  const [selectedYear, setSelectedYear] = useState('2025');
   const [expandedItems, setExpandedItems] = useState(new Set(['1', '3'])); // GMV and Spend Break Ups expanded by default
   const [planningData, setPlanningData] = useState({});
   const [currentPlan, setCurrentPlan] = useState(null);
   const [hierarchyData, setHierarchyData] = useState([]);
+  const [showChangelog, setShowChangelog] = useState(false);
+  const [changelogData, setChangelogData] = useState([]);
+
+  // Mock changelog data
+  const mockChangelog = [
+    {
+      id: 1,
+      user: 'John Smith',
+      action: 'UPDATE',
+      timestamp: '2025-01-15T10:30:00Z',
+      changes: { 
+        field: 'GMV - Brand Alpha - January', 
+        old_value: 115000, 
+        new_value: 120000 
+      },
+      comment: 'Updated Q1 forecast based on new market data'
+    },
+    {
+      id: 2,
+      user: 'Sarah Johnson',
+      action: 'UPDATE', 
+      timestamp: '2025-01-14T14:20:00Z',
+      changes: { 
+        field: 'Consumer Promo - Brand Beta - February', 
+        old_value: 7000, 
+        new_value: 7500 
+      },
+      comment: 'Increased promo budget for Valentine campaign'
+    },
+    {
+      id: 3,
+      user: 'Mike Chen',
+      action: 'CREATE',
+      timestamp: '2025-01-10T09:15:00Z', 
+      changes: { 
+        field: 'Plan Status', 
+        old_value: null, 
+        new_value: 'Draft' 
+      },
+      comment: 'Created Q1 2025 Marketing Plan'
+    }
+  ];
 
   useEffect(() => {
-    initializePlanning();
-  }, []);
-
-  useEffect(() => {
-    if (selectedPlan) {
+    if (selectedPlan && selectedDepartment) {
       loadPlanData(selectedPlan);
     }
-  }, [selectedPlan]);
-
-  const initializePlanning = async () => {
-    setLoading(true);
-    try {
-      // Simulate loading delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      toast({
-        title: "Success",
-        description: "Financial Planning loaded successfully"
-      });
-    } catch (error) {
-      console.error('Error initializing planning:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load planning data",
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [selectedPlan, selectedDepartment, selectedBrand, selectedMonth, selectedYear]);
 
   const loadPlanData = (planId) => {
     const plan = plans.find(p => p.id === parseInt(planId));
@@ -84,6 +103,7 @@ const FinancialPlanning = () => {
     // Get department and build hierarchy
     const hierarchy = buildInputMatrixHierarchy(plan.department);
     setHierarchyData(hierarchy);
+    setChangelogData(mockChangelog);
   };
 
   const toggleExpanded = (itemId) => {
@@ -113,6 +133,21 @@ const FinancialPlanning = () => {
       // Here you would typically send planningData to your Django API
       console.log('Saving planning data:', planningData);
       
+      // Add to changelog
+      const newChange = {
+        id: changelogData.length + 1,
+        user: user?.name || 'Current User',
+        action: 'UPDATE',
+        timestamp: new Date().toISOString(),
+        changes: { 
+          field: 'Multiple Fields', 
+          old_value: 'Various', 
+          new_value: 'Updated' 
+        },
+        comment: `Saved ${Object.keys(planningData).length} planning updates`
+      };
+      setChangelogData(prev => [newChange, ...prev]);
+      
       toast({
         title: "Success",
         description: "Plan saved successfully"
@@ -127,6 +162,17 @@ const FinancialPlanning = () => {
     } finally {
       setSaving(false);
     }
+  };
+
+  const getFilteredHierarchy = () => {
+    // Apply filters to hierarchy data
+    return hierarchyData.filter(matrix => {
+      // Brand filter
+      if (selectedBrand && matrix.brands && matrix.brands.length > 0) {
+        return matrix.brands.includes(parseInt(selectedBrand));
+      }
+      return true;
+    });
   };
 
   const renderMatrixRow = (matrix, level = 0, parentExpanded = true) => {
@@ -171,7 +217,11 @@ const FinancialPlanning = () => {
 
     // Brand breakdown rows (if matrix has brands and is expanded)
     if (hasBrands && isExpanded) {
-      matrix.brands.forEach(brandId => {
+      const filteredBrands = selectedBrand ? 
+        matrix.brands.filter(brandId => brandId === parseInt(selectedBrand)) :
+        matrix.brands;
+        
+      filteredBrands.forEach(brandId => {
         const brand = brands.find(b => b.id === brandId);
         if (brand) {
           rows.push(
@@ -200,9 +250,22 @@ const FinancialPlanning = () => {
 
   const renderMonthlyColumns = (matrixId, brandId) => {
     const months = [1, 2, 3]; // Jan, Feb, Mar
-    const monthNames = ['JAN', 'FEB', 'MAR'];
+    
+    // Apply month filter
+    const filteredMonths = selectedMonth ? 
+      months.filter(month => month === parseInt(selectedMonth)) :
+      months;
+    
+    if (filteredMonths.length === 0) {
+      return <td colSpan="3" className="p-3 text-center text-gray-500">No data for selected month</td>;
+    }
     
     return months.map(month => {
+      const isVisible = filteredMonths.includes(month);
+      if (!isVisible && selectedMonth) {
+        return <td key={month} className="p-2 bg-gray-100"></td>;
+      }
+      
       const planEntry = getPlanDataForMatrix(currentPlan?.id, matrixId, month, brandId);
       const value = planEntry ? parseFloat(planEntry.planned_value) : 0;
       const key = `${matrixId}-${month}-${brandId || 'null'}`;
@@ -210,13 +273,14 @@ const FinancialPlanning = () => {
       const displayValue = editedValue !== undefined ? editedValue : value;
       
       return (
-        <td key={month} className="p-2">
+        <td key={month} className={`p-2 ${!isVisible ? 'opacity-50' : ''}`}>
           <Input
             type="number"
             value={displayValue === 0 ? '' : displayValue}
             onChange={(e) => handleCellEdit(matrixId, month, brandId, e.target.value)}
             className="w-20 h-8 text-right text-sm border-gray-200 focus:border-blue-500"
             placeholder="0"
+            disabled={!isVisible}
           />
         </td>
       );
@@ -242,21 +306,65 @@ const FinancialPlanning = () => {
     );
   };
 
-  if (loading) {
-    return <PageLoader message="Loading Financial Planning..." />;
-  }
+  const renderChangelog = () => (
+    <Dialog open={showChangelog} onOpenChange={setShowChangelog}>
+      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="flex items-center space-x-2">
+            <History className="w-5 h-5" />
+            <span>Planning Changelog</span>
+          </DialogTitle>
+          <DialogDescription>
+            Track all changes made to this planning data
+          </DialogDescription>
+        </DialogHeader>
+        
+        <div className="space-y-4">
+          {changelogData.map((change, index) => (
+            <div key={change.id} className="border rounded-lg p-4 bg-white">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center space-x-3">
+                  <Badge variant={change.action === 'CREATE' ? 'default' : 'secondary'}>
+                    {change.action}
+                  </Badge>
+                  <span className="font-medium">{change.user}</span>
+                </div>
+                <span className="text-sm text-gray-500">
+                  {new Date(change.timestamp).toLocaleDateString()} {new Date(change.timestamp).toLocaleTimeString()}
+                </span>
+              </div>
+              
+              <div className="text-sm text-gray-700 mb-2">
+                <strong>Field:</strong> {change.changes.field}
+              </div>
+              
+              {change.changes.old_value && (
+                <div className="text-sm text-gray-700 mb-2">
+                  <strong>Changed from:</strong> {change.changes.old_value?.toLocaleString?.()} 
+                  <strong> to:</strong> {change.changes.new_value?.toLocaleString?.()}
+                </div>
+              )}
+              
+              {change.comment && (
+                <div className="text-sm text-gray-600 italic">
+                  "{change.comment}"
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
 
   if (!currentPlan) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="p-6 flex items-center justify-center h-full">
         <Card className="w-full max-w-md">
           <CardContent className="flex items-center justify-center h-64">
             <div className="text-center">
               <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-600 mb-4">No plan selected</p>
-              <Button onClick={() => navigate('/dashboard')}>
-                Go to Dashboard
-              </Button>
             </div>
           </CardContent>
         </Card>
@@ -266,168 +374,193 @@ const FinancialPlanning = () => {
 
   const currentDepartment = departments.find(d => d.id === currentPlan.department);
   const currentStatus = planStatus.find(s => s.id === currentPlan.status);
+  const filteredHierarchy = getFilteredHierarchy();
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('/dashboard')}
-                className="mr-4"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Dashboard
-              </Button>
+    <div className="p-6 space-y-6">
+      {/* Filters and Actions */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Filters Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <Filter className="w-5 h-5" />
+              <span>Filters</span>
+            </CardTitle>
+            <CardDescription>
+              Filter planning data by department, brand, plan, month and year
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">{currentPlan.name}</h1>
-                <p className="text-sm text-gray-600">
-                  Department: {currentDepartment?.name} | Year: {currentPlan.year}
-                </p>
+                <Label>Department</Label>
+                <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select department" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {departments.map(dept => (
+                      <SelectItem key={dept.id} value={dept.id.toString()}>
+                        {dept.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label>Plan</Label>
+                <Select value={selectedPlan} onValueChange={setSelectedPlan}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select plan" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {plans.filter(p => p.department === parseInt(selectedDepartment)).map(plan => (
+                      <SelectItem key={plan.id} value={plan.id.toString()}>
+                        {plan.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label>Brand</Label>
+                <Select value={selectedBrand} onValueChange={setSelectedBrand}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="All brands" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">All Brands</SelectItem>
+                    {brands.map(brand => (
+                      <SelectItem key={brand.id} value={brand.id.toString()}>
+                        {brand.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label>Month</Label>
+                <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="All months" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">All Months</SelectItem>
+                    <SelectItem value="1">January</SelectItem>
+                    <SelectItem value="2">February</SelectItem>
+                    <SelectItem value="3">March</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label>Year</Label>
+                <Select value={selectedYear} onValueChange={setSelectedYear}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="2024">2024</SelectItem>
+                    <SelectItem value="2025">2025</SelectItem>
+                    <SelectItem value="2026">2026</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
+          </CardContent>
+        </Card>
+
+        {/* Plan Status and Actions */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <span>{currentPlan.name}</span>
               <Badge 
                 variant={currentStatus?.name === 'Draft' ? 'secondary' : 'default'}
                 className="text-sm"
               >
                 {currentStatus?.name || 'Draft'}
               </Badge>
-              <Button 
-                onClick={savePlan} 
-                disabled={saving}
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                {saving ? (
-                  <>
-                    <LoadingSpinner size="sm" />
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-4 h-4 mr-2" />
-                    Save Plan
-                  </>
-                )}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Plan Selection */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Calendar className="w-5 h-5" />
-              <span>Plan Selection</span>
             </CardTitle>
+            <CardDescription>
+              Department: {currentDepartment?.name} | Year: {currentPlan.year}
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center space-x-4">
-              <div className="flex-1">
-                <Label>Select Plan</Label>
-                <Select value={selectedPlan} onValueChange={setSelectedPlan}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a plan" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {plans.map(plan => {
-                      const dept = departments.find(d => d.id === plan.department);
-                      const status = planStatus.find(s => s.id === plan.status);
-                      return (
-                        <SelectItem key={plan.id} value={plan.id.toString()}>
-                          <div>
-                            <div className="font-medium">{plan.name}</div>
-                            <div className="text-xs text-gray-500">
-                              {dept?.name} - {plan.year} ({status?.name})
-                            </div>
-                          </div>
-                        </SelectItem>
-                      );
-                    })}
-                  </SelectContent>
-                </Select>
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-gray-600">
+                Created by: {financialUsers.find(u => u.id === currentPlan.created_by)?.first_name} {financialUsers.find(u => u.id === currentPlan.created_by)?.last_name}
               </div>
-              <Button variant="outline" onClick={() => loadPlanData(selectedPlan)}>
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Refresh
-              </Button>
+              <div className="flex space-x-2">
+                <Button 
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowChangelog(true)}
+                >
+                  <History className="w-4 h-4 mr-2" />
+                  Changelog
+                </Button>
+                <Button 
+                  onClick={savePlan} 
+                  disabled={saving}
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  {saving ? (
+                    <>
+                      <LoadingSpinner size="sm" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4 mr-2" />
+                      Save Plan
+                    </>
+                  )}
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
-
-        {/* Planning Grid */}
-        <Card className="shadow-lg">
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="bg-gray-50 border-b">
-                    <th className="text-left p-4 font-medium text-gray-700 min-w-64">METRIC</th>
-                    <th className="text-center p-4 font-medium text-gray-700 w-32">BRAND</th>
-                    <th className="text-center p-4 font-medium text-gray-700 w-24">JAN</th>
-                    <th className="text-center p-4 font-medium text-gray-700 w-24">FEB</th>
-                    <th className="text-center p-4 font-medium text-gray-700 w-24">MAR</th>
-                    <th className="text-center p-4 font-medium text-gray-700 w-32 bg-blue-50">Q1 PLAN</th>
-                    <th className="text-center p-4 font-medium text-gray-700 w-32 bg-green-50">Q1 ACTUAL</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {hierarchyData.map(matrix => renderMatrixRow(matrix))}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Summary */}
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center space-x-3">
-                <Building className="w-8 h-8 text-blue-500" />
-                <div>
-                  <div className="text-sm text-gray-600">Department</div>
-                  <div className="font-semibold">{currentDepartment?.name}</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center space-x-3">
-                <Calendar className="w-8 h-8 text-green-500" />
-                <div>
-                  <div className="text-sm text-gray-600">Planning Period</div>
-                  <div className="font-semibold">Q1 {currentPlan.year}</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center space-x-3">
-                <User className="w-8 h-8 text-purple-500" />
-                <div>
-                  <div className="text-sm text-gray-600">Created By</div>
-                  <div className="font-semibold">
-                    {financialUsers.find(u => u.id === currentPlan.created_by)?.first_name} {financialUsers.find(u => u.id === currentPlan.created_by)?.last_name}
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
       </div>
+
+      {/* Planning Grid */}
+      <Card className="shadow-lg">
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-gray-50 border-b">
+                  <th className="text-left p-4 font-medium text-gray-700 min-w-64">METRIC</th>
+                  <th className="text-center p-4 font-medium text-gray-700 w-32">BRAND</th>
+                  <th className="text-center p-4 font-medium text-gray-700 w-24">JAN</th>
+                  <th className="text-center p-4 font-medium text-gray-700 w-24">FEB</th>
+                  <th className="text-center p-4 font-medium text-gray-700 w-24">MAR</th>
+                  <th className="text-center p-4 font-medium text-gray-700 w-32 bg-blue-50">Q1 PLAN</th>
+                  <th className="text-center p-4 font-medium text-gray-700 w-32 bg-green-50">Q1 ACTUAL</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredHierarchy.length > 0 ? (
+                  filteredHierarchy.map(matrix => renderMatrixRow(matrix))
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="p-8 text-center text-gray-500">
+                      No data available for the selected filters
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Changelog Dialog */}
+      {renderChangelog()}
     </div>
   );
 };
