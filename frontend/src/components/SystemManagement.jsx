@@ -47,8 +47,8 @@ const SystemManagement = () => {
 
   if (!canEdit) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <Card className="max-w-md">
+      <AppLayout title="Access Denied" subtitle="System Management">
+        <Card className="max-w-md mx-auto">
           <CardHeader>
             <CardTitle className="text-center text-red-600">Access Denied</CardTitle>
           </CardHeader>
@@ -61,7 +61,7 @@ const SystemManagement = () => {
             </Button>
           </CardContent>
         </Card>
-      </div>
+      </AppLayout>
     );
   }
 
