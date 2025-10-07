@@ -661,7 +661,7 @@ const SystemManagement = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </div>
+    </AppLayout>
   );
 };
 
