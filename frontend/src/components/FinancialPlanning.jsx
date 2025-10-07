@@ -507,10 +507,32 @@ const FinancialPlanning = () => {
                 <Button 
                   variant="outline"
                   size="sm"
-                  onClick={() => setShowChangelog(true)}
+                  onClick={() => {
+                    setChangelogData(mockChangelog);
+                    setShowChangelog(true);
+                  }}
                 >
                   <History className="w-4 h-4 mr-2" />
-                  Changelog
+                  Changelog ({mockChangelog.length})
+                </Button>
+                <Button 
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setLoading(true);
+                    setTimeout(() => {
+                      loadPlanData(selectedPlan);
+                      setLoading(false);
+                      toast({
+                        title: "Data Refreshed",
+                        description: "Planning data has been refreshed successfully."
+                      });
+                    }, 1000);
+                  }}
+                  disabled={loading}
+                >
+                  <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                  Refresh
                 </Button>
                 <Button 
                   onClick={savePlan} 
