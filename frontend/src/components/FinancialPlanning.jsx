@@ -565,9 +565,10 @@ const FinancialPlanning = () => {
         </CardContent>
       </Card>
 
-      {/* Changelog Dialog */}
-      {renderChangelog()}
-    </div>
+        {/* Changelog Dialog */}
+        {renderChangelog()}
+      </div>
+    </AppLayout>
   );
 };
 
