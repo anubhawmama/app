@@ -1,14 +1,37 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../App';
+import AppLayout from './AppLayout';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { Label } from './ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Badge } from './ui/badge';
-import { Separator } from './ui/separator';
-import { ArrowLeft, User, Mail, Phone, MapPin, Edit, Save, X } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+import { Label } from './ui/label';
+import { Textarea } from './ui/textarea';
+import { 
+  User, 
+  Settings, 
+  Shield, 
+  Bell, 
+  Key,
+  Camera,
+  Edit,
+  Save,
+  X,
+  Check,
+  Eye,
+  EyeOff,
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  Clock,
+  UserCheck,
+  Activity
+} from 'lucide-react';
 import { toast } from '../hooks/use-toast';
 
 const Profile = () => {
