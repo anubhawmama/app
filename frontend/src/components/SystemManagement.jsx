@@ -320,29 +320,11 @@ const SystemManagement = () => {
   const data = getActiveData();
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b border-slate-200">
-        <div className="flex items-center justify-between h-16 px-6">
-          <div className="flex items-center">
-            <Button
-              variant="ghost"
-              onClick={() => navigate('/dashboard')}
-              className="mr-4"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Dashboard
-            </Button>
-            <div className="flex items-center space-x-3">
-              <Settings className="h-5 w-5 text-slate-600" />
-              <h1 className="text-xl font-semibold text-slate-900">System Management</h1>
-              <Badge variant="outline">{user?.role}</Badge>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="p-6">
+    <AppLayout 
+      title="System Management" 
+      subtitle="Manage system metadata, users, and configuration"
+    >
+      <div className="space-y-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="departments" className="flex items-center space-x-2">
