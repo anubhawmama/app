@@ -171,6 +171,16 @@ function App() {
                   <Permission />
                 </ProtectedRoute>
               } />
+              <Route path="/notifications" element={
+                <ProtectedRoute>
+                  <Notifications />
+                </ProtectedRoute>
+              } />
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              } />
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               {/* Catch-all route for 404 */}
               <Route path="*" element={<NotFound />} />
