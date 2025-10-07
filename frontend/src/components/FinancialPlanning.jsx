@@ -361,16 +361,18 @@ const FinancialPlanning = () => {
 
   if (!currentPlan) {
     return (
-      <div className="p-6 flex items-center justify-center h-full">
-        <Card className="w-full max-w-md">
-          <CardContent className="flex items-center justify-center h-64">
-            <div className="text-center">
-              <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600 mb-4">No plan selected</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <AppLayout title="Financial Planning" subtitle="Loading...">
+        <div className="flex items-center justify-center h-full">
+          <Card className="w-full max-w-md">
+            <CardContent className="flex items-center justify-center h-64">
+              <div className="text-center">
+                <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600 mb-4">No plan selected</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </AppLayout>
     );
   }
 
