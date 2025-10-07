@@ -369,7 +369,7 @@ metadata:
 
 test_plan:
   current_focus:
-    []
+    - "Financial Planning System (Django Schema Implementation)"
   stuck_tasks:
     []
   test_all: false
