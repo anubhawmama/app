@@ -124,7 +124,7 @@ const PlanningRequests = () => {
       emp.departmentId === request.departmentId && 
       (emp.role === 'Creator' || emp.role === 'Approver')
     );
-    const responseCount = request.responses.length;
+    const responseCount = request.responses ? request.responses.length : 0;
     const totalExpected = departmentEmployees.length;
     return totalExpected > 0 ? `${responseCount}/${totalExpected}` : '0/0';
   };
