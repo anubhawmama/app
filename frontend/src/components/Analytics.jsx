@@ -200,42 +200,26 @@ const Analytics = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b border-slate-200">
-        <div className="flex items-center justify-between h-16 px-6">
-          <div className="flex items-center">
-            <Button
-              variant="ghost"
-              onClick={() => navigate('/dashboard')}
-              className="mr-4"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Dashboard
-            </Button>
-            <div className="flex items-center space-x-3">
-              <BarChart3 className="h-5 w-5 text-slate-600" />
-              <h1 className="text-xl font-semibold text-slate-900">Analytics Dashboard</h1>
-            </div>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              onClick={refreshData}
-              disabled={loading}
-            >
-              <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-              Refresh
-            </Button>
-            <Button variant="outline">
-              <Download className="h-4 w-4 mr-2" />
-              Export
-            </Button>
-          </div>
+    <AppLayout 
+      title="Analytics Dashboard" 
+      subtitle="Comprehensive analytics and insights for planning activities"
+    >
+      <div className="space-y-6">
+        {/* Action Buttons */}
+        <div className="flex justify-end space-x-2">
+          <Button
+            variant="outline"
+            onClick={refreshData}
+            disabled={loading}
+          >
+            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            Refresh
+          </Button>
+          <Button variant="outline">
+            <Download className="h-4 w-4 mr-2" />
+            Export
+          </Button>
         </div>
-      </div>
-
-      <div className="p-6">
         {/* Filters */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center space-x-4">
