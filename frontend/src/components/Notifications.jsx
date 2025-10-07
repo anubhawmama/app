@@ -149,61 +149,51 @@ const Notifications = () => {
   const unreadCount = notifications.filter(n => !n.read).length;
   const actionRequiredCount = notifications.filter(n => n.actionRequired && !n.read).length;
 
-  const getBadgeVariant = (type) => {
-    switch (type) {
-      case 'success':
-        return 'default';
-      case 'warning':
-        return 'secondary';
-      case 'error':
-        return 'destructive';
-      default:
-        return 'outline';
-    }
-  };
-
-  const markAsRead = (id) => {
+  const markAsRead = (notificationId) => {
     setNotifications(prev => 
-      prev.map(notif => 
-        notif.id === id ? { ...notif, read: true } : notif
+      prev.map(notification => 
+        notification.id === notificationId 
+          ? { ...notification, read: true }
+          : notification
       )
     );
     toast({
-      title: "Marked as read",
-      description: "Notification has been marked as read.",
+      title: "Success",
+      description: "Notification marked as read"
     });
   };
 
   const markAllAsRead = () => {
     setNotifications(prev => 
-      prev.map(notif => ({ ...notif, read: true }))
+      prev.map(notification => ({ ...notification, read: true }))
     );
     toast({
-      title: "All notifications marked as read",
-      description: "All notifications have been marked as read.",
+      title: "Success",
+      description: "All notifications marked as read"
     });
   };
 
-  const deleteNotification = (id) => {
-    setNotifications(prev => prev.filter(notif => notif.id !== id));
+  const deleteNotification = (notificationId) => {
+    setNotifications(prev => 
+      prev.filter(notification => notification.id !== notificationId)
+    );
     toast({
-      title: "Notification deleted",
-      description: "Notification has been deleted.",
+      title: "Success",
+      description: "Notification deleted"
     });
   };
 
-  const filteredNotifications = notifications.filter(notif => {
-    switch (filter) {
-      case 'unread':
-        return !notif.read;
-      case 'read':
-        return notif.read;
-      default:
-        return true;
-    }
-  });
-
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const getTimeAgo = (timestamp) => {
+    const now = new Date();
+    const time = new Date(timestamp);
+    const diffInHours = Math.floor((now - time) / (1000 * 60 * 60));
+    
+    if (diffInHours < 1) return 'Just now';
+    if (diffInHours < 24) return `${diffInHours}h ago`;
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 7) return `${diffInDays}d ago`;
+    return time.toLocaleDateString();
+  };
 
   return (
     <div className="min-h-screen bg-slate-50">
