@@ -125,6 +125,11 @@ function App() {
               } />
               <Route path="/planning" element={
                 <ProtectedRoute>
+                  <FinancialPlanning />
+                </ProtectedRoute>
+              } />
+              <Route path="/planning-enhanced" element={
+                <ProtectedRoute>
                   <EnhancedPlanning />
                 </ProtectedRoute>
               } />
