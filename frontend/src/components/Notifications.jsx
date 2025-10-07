@@ -24,7 +24,8 @@ import {
   Filter,
   Search,
   Settings,
-  RefreshCw
+  RefreshCw,
+  ArrowLeft
 } from 'lucide-react';
 import { toast } from '../hooks/use-toast';
 
