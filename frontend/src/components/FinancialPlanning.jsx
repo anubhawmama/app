@@ -170,7 +170,7 @@ const FinancialPlanning = () => {
     // Apply filters to hierarchy data
     return hierarchyData.filter(matrix => {
       // Brand filter
-      if (selectedBrand && matrix.brands && matrix.brands.length > 0) {
+      if (selectedBrand && selectedBrand !== "all" && matrix.brands && matrix.brands.length > 0) {
         return matrix.brands.includes(parseInt(selectedBrand));
       }
       return true;
