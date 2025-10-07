@@ -12,7 +12,7 @@ import sys
 import time
 
 # Configuration
-BASE_URL = "https://planforge-4.preview.emergentagent.com/api"
+BASE_URL = "https://planwise-admin.preview.emergentagent.com/api"
 TIMEOUT = 30
 
 class BackendTester:
