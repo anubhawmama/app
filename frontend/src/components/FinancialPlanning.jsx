@@ -514,7 +514,7 @@ const FinancialPlanning = () => {
                     <SelectValue placeholder="All months" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Months</SelectItem>
+                    <SelectItem value="all">All Months</SelectItem>
                     <SelectItem value="1">January</SelectItem>
                     <SelectItem value="2">February</SelectItem>
                     <SelectItem value="3">March</SelectItem>
