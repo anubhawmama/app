@@ -277,6 +277,10 @@ const Planning = () => {
     }
   };
 
+  const getHeaderText = () => {
+    return getViewTitle();
+  };
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
