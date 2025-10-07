@@ -1,22 +1,31 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../App';
+import AppLayout from './AppLayout';
 import { Button } from './ui/button';
+import { Input } from './ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { Separator } from './ui/separator';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { 
-  ArrowLeft, 
   Bell, 
   Check, 
-  X, 
-  AlertCircle, 
-  CheckCircle, 
-  AlertTriangle, 
+  X,
+  Clock,
+  AlertCircle,
+  CheckCircle,
   Info,
+  AlertTriangle,
   Trash2,
-  MoreHorizontal
+  MarkAsRead,
+  Filter,
+  Search,
+  Settings,
+  RefreshCw
 } from 'lucide-react';
-import { mockNotifications } from '../data/mockData';
 import { toast } from '../hooks/use-toast';
 
 const Notifications = () => {
