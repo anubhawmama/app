@@ -507,7 +507,12 @@ export const mockPlanRequests = [
     requestedAt: '2025-03-01T10:00:00Z',
     submittedAt: '2025-03-05T14:30:00Z',
     submittedBy: 1, // Faustino (Creator)
-    message: 'Please submit your Q2 product planning numbers for all assigned SKUs.'
+    message: 'Please submit your Q2 product planning numbers for all assigned SKUs.',
+    dueDate: '2025-03-10T23:59:59Z',
+    responses: [
+      { userId: 1, respondedAt: '2025-03-05T14:30:00Z' },
+      { userId: 3, respondedAt: '2025-03-04T11:15:00Z' }
+    ]
   },
   {
     id: 2,
@@ -517,7 +522,9 @@ export const mockPlanRequests = [
     requestedAt: '2025-03-01T10:00:00Z',
     submittedAt: null,
     submittedBy: null,
-    message: 'Please submit your Q2 marketing planning numbers for all assigned SKUs.'
+    message: 'Please submit your Q2 marketing planning numbers for all assigned SKUs.',
+    dueDate: '2025-03-15T23:59:59Z',
+    responses: []
   },
   {
     id: 3,
@@ -527,7 +534,11 @@ export const mockPlanRequests = [
     requestedAt: '2024-11-15T09:00:00Z',
     submittedAt: null,
     submittedBy: null,
-    message: 'Annual budget planning - please provide estimates for all products.'
+    message: 'Annual budget planning - please provide estimates for all products.',
+    dueDate: '2024-12-01T23:59:59Z',
+    responses: [
+      { userId: 1, respondedAt: '2024-11-20T16:45:00Z' }
+    ]
   }
 ];
 
