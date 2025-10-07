@@ -364,7 +364,7 @@ const PlanningRequests = () => {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </AppLayout>
   );
 };
 
