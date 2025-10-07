@@ -14,6 +14,8 @@ import PlanningRequests from "./components/PlanningRequests";
 import PlanManagement from "./components/PlanManagement";
 import Reports from "./components/Reports";
 import Permission from "./components/Permission";
+import Notifications from "./components/Notifications";
+import Profile from "./components/Profile";
 import NotFound from "./components/NotFound";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { Toaster } from "./components/ui/toaster";
