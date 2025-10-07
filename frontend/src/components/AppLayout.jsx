@@ -94,18 +94,33 @@ const AppLayout = ({ children, title, subtitle }) => {
               {subtitle && <p className="text-slate-600">{subtitle}</p>}
             </div>
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => navigate('/notifications')}
+                className="relative"
+              >
                 <Bell className="h-4 w-4" />
+                {/* Notification badge - you can add logic to show unread count */}
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                  3
+                </span>
               </Button>
               
               <div className="flex items-center space-x-3">
-                <Avatar className="h-8 w-8">
+                <Avatar 
+                  className="h-8 w-8 cursor-pointer hover:ring-2 hover:ring-slate-300 transition-all"
+                  onClick={() => navigate('/profile')}
+                >
                   <AvatarImage src={user?.avatar} alt={user?.name} />
                   <AvatarFallback className="bg-slate-900 text-white">
                     {user?.name?.split(' ').map(n => n[0]).join('').toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <div className="hidden md:block">
+                <div 
+                  className="hidden md:block cursor-pointer hover:bg-slate-50 p-2 rounded transition-colors"
+                  onClick={() => navigate('/profile')}
+                >
                   <div className="text-sm font-medium text-slate-900">{user?.name}</div>
                   <div className="text-xs text-slate-500">{user?.role}</div>
                 </div>
