@@ -350,7 +350,7 @@ const PlanningRequests = () => {
                       <span>
                         Sent on {new Date(request.sentAt).toLocaleDateString()} at {new Date(request.sentAt).toLocaleTimeString()}
                       </span>
-                      {request.responses.length > 0 && (
+                      {request.responses && request.responses.length > 0 && (
                         <div className="flex -space-x-2">
                           {request.responses.slice(0, 3).map((response, i) => {
                             const employee = mockEmployees.find(emp => emp.id === response.userId);
