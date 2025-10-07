@@ -123,7 +123,28 @@ class BackendTester:
             self.results['failed'] += 1
             self.results['errors'].append(f"Auth protected endpoint: {str(e)}")
         
-        # Test 3: Create a test user for further testing
+        # Test 3: Session check endpoint without session
+        try:
+            response = self.session.get(f"{self.base_url}/auth/session-check")
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("authenticated") == False:
+                    self.log("✅ Session check correctly returns unauthenticated")
+                    self.results['passed'] += 1
+                else:
+                    self.log("❌ Session check should return authenticated: false")
+                    self.results['failed'] += 1
+                    self.results['errors'].append("Auth: Session check should return authenticated: false")
+            else:
+                self.log(f"❌ Session check failed - Status: {response.status_code}")
+                self.results['failed'] += 1
+                self.results['errors'].append(f"Auth: Session check failed {response.status_code}")
+        except Exception as e:
+            self.log(f"❌ Session check test error: {str(e)}")
+            self.results['failed'] += 1
+            self.results['errors'].append(f"Auth session check: {str(e)}")
+        
+        # Test 4: Create a test user for further testing
         self.create_test_users()
     
     def create_test_users(self):
