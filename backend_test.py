@@ -359,8 +359,11 @@ class BackendTester:
         # Test 2: Create brand
         test_brand = {
             "name": "Test Brand",
-            "code": f"TB_{uuid.uuid4().hex[:8].upper()}",
-            "description": "Test brand for API testing"
+            "description": "Test brand for API testing",
+            "short_name": f"TB{uuid.uuid4().hex[:4].upper()}",
+            "sap_division_code": f"SAP{uuid.uuid4().hex[:4].upper()}",
+            "article_type": "Consumer",
+            "merchandise_code": f"MC{uuid.uuid4().hex[:4].upper()}"
         }
         
         try:
