@@ -354,7 +354,7 @@ const PlanManagement = () => {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </AppLayout>
   );
 };
 
