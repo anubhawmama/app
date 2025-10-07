@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../App';
+import AppLayout from './AppLayout';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
@@ -16,7 +17,8 @@ import {
   User,
   Filter,
   History,
-  Search
+  Search,
+  RefreshCw
 } from 'lucide-react';
 import { 
   departments, 
