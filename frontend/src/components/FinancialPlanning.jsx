@@ -379,9 +379,13 @@ const FinancialPlanning = () => {
   const filteredHierarchy = getFilteredHierarchy();
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Filters and Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <AppLayout 
+      title="Financial Planning" 
+      subtitle={currentPlan ? `${currentPlan.name} - ${currentDepartment?.name}` : "Loading..."}
+    >
+      <div className="space-y-6">
+        {/* Filters and Actions */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Filters Card */}
         <Card>
           <CardHeader>
