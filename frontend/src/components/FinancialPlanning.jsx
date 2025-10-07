@@ -40,8 +40,8 @@ const FinancialPlanning = () => {
   const [saving, setSaving] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState('1'); // Q1 2025 Marketing Plan
   const [selectedDepartment, setSelectedDepartment] = useState('1'); // Marketing
-  const [selectedBrand, setSelectedBrand] = useState(''); // All brands
-  const [selectedMonth, setSelectedMonth] = useState(''); // All months
+  const [selectedBrand, setSelectedBrand] = useState('all'); // All brands
+  const [selectedMonth, setSelectedMonth] = useState('all'); // All months
   const [selectedYear, setSelectedYear] = useState('2025');
   const [expandedItems, setExpandedItems] = useState(new Set(['1', '3'])); // GMV and Spend Break Ups expanded by default
   const [planningData, setPlanningData] = useState({});
