@@ -737,6 +737,68 @@ class BackendTester:
             self.results['failed'] += 1
             self.results['errors'].append(f"Notification create: {str(e)}")
     
+    def test_logout_endpoint(self):
+        """Test logout endpoint"""
+        self.log("Testing Logout Endpoint...")
+        
+        # Test logout with valid token
+        headers = self.get_auth_headers('admin')
+        if headers:
+            try:
+                response = self.session.post(f"{self.base_url}/auth/logout", headers=headers)
+                if response.status_code == 200:
+                    data = response.json()
+                    if data.get("success") == True:
+                        self.log("✅ Logout endpoint working correctly")
+                        self.results['passed'] += 1
+                    else:
+                        self.log("❌ Logout endpoint - invalid response format")
+                        self.results['failed'] += 1
+                        self.results['errors'].append("Auth: Logout invalid response format")
+                else:
+                    self.log(f"❌ Logout endpoint failed - Status: {response.status_code}")
+                    self.results['failed'] += 1
+                    self.results['errors'].append(f"Auth: Logout failed {response.status_code}")
+            except Exception as e:
+                self.log(f"❌ Logout endpoint error: {str(e)}")
+                self.results['failed'] += 1
+                self.results['errors'].append(f"Auth logout: {str(e)}")
+        else:
+            self.log("⚠️ Skipping logout test - no admin token available")
+    
+    def test_cors_headers(self):
+        """Test CORS headers for localhost:3000 origin"""
+        self.log("Testing CORS Headers...")
+        
+        try:
+            # Test preflight request
+            headers = {
+                'Origin': 'http://localhost:3000',
+                'Access-Control-Request-Method': 'POST',
+                'Access-Control-Request-Headers': 'Content-Type,Authorization'
+            }
+            response = self.session.options(f"{self.base_url}/auth/login", headers=headers)
+            
+            # Check CORS headers in response
+            cors_headers = response.headers
+            if 'Access-Control-Allow-Origin' in cors_headers:
+                origin = cors_headers.get('Access-Control-Allow-Origin')
+                if origin == '*' or origin == 'http://localhost:3000':
+                    self.log("✅ CORS headers correctly configured")
+                    self.results['passed'] += 1
+                else:
+                    self.log(f"❌ CORS origin incorrect: {origin}")
+                    self.results['failed'] += 1
+                    self.results['errors'].append(f"CORS: Incorrect origin {origin}")
+            else:
+                self.log("❌ CORS headers missing")
+                self.results['failed'] += 1
+                self.results['errors'].append("CORS: Access-Control-Allow-Origin header missing")
+        except Exception as e:
+            self.log(f"❌ CORS test error: {str(e)}")
+            self.results['failed'] += 1
+            self.results['errors'].append(f"CORS test: {str(e)}")
+    
     def test_role_based_access_control(self):
         """Test role-based access control"""
         self.log("Testing Role-based Access Control...")
