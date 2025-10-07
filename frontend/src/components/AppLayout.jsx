@@ -41,6 +41,7 @@ const AppLayout = ({ children, title, subtitle }) => {
     ...(permissions.canSendRequests ? [{ icon: FileText, label: 'Planning Requests', path: '/planning-requests' }] : []),
     ...(permissions.canAccessPlanning ? [{ icon: Target, label: 'Plan Management', path: '/plan-management' }] : []),
     { icon: Activity, label: 'Reports', path: '/reports' },
+    ...(permissions.canEditSystemMetadata ? [{ icon: Shield, label: 'Permission', path: '/permission' }] : []),
   ];
 
   return (
