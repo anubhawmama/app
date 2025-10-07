@@ -282,45 +282,26 @@ const Planning = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b border-slate-200">
-        <div className="flex items-center justify-between h-16 px-6">
-          <div className="flex items-center">
-            <Button
-              variant="ghost"
-              onClick={() => navigate('/dashboard')}
-              className="mr-4"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Dashboard
-            </Button>
-            <div className="flex items-center space-x-3">
-              <Calendar className="h-5 w-5 text-slate-600" />
-              <h1 className="text-xl font-semibold text-slate-900">Planning</h1>
-              <Badge variant="outline">{userPermissions.role}</Badge>
-            </div>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              onClick={() => setShowHistoryDialog(true)}
-              className="text-slate-600"
-            >
-              <History className="h-4 w-4 mr-2" />
-              History
-            </Button>
-            {hasUnsavedChanges && (
-              <Button onClick={handleSaveAll} className="bg-slate-900 hover:bg-slate-800">
-                <Save className="h-4 w-4 mr-2" />
-                Save Changes ({Object.keys(pendingChanges).length})
-              </Button>
-            )}
-          </div>
+    <AppLayout 
+      title="Enhanced Planning" 
+      subtitle={`${getHeaderText()} - Resource planning and allocation`}
+    >
+      <div className="space-y-6">
+        {/* Action Buttons */}
+        <div className="flex justify-end space-x-2">
+          <Button variant="outline" onClick={() => setShowHistoryDialog(true)}>
+            <History className="h-4 w-4 mr-2" />
+            History
+          </Button>
+          <Button 
+            onClick={() => setShowConfirmDialog(true)} 
+            disabled={!hasUnsavedChanges}
+            className="bg-slate-900 hover:bg-slate-800 disabled:opacity-50"
+          >
+            <Save className="h-4 w-4 mr-2" />
+            Save Changes {Object.keys(pendingChanges).length > 0 && `(${Object.keys(pendingChanges).length})`}
+          </Button>
         </div>
-      </div>
-
-      <div className="p-6">
         {/* Filters and Controls */}
         <div className="mb-6 space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
