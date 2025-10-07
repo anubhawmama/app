@@ -64,24 +64,141 @@ const Profile = () => {
     confirm: false
   });
 
-  const handleSave = () => {
+  // Security & Activity data
+  const [activityLog] = useState([
+    {
+      id: 1,
+      action: 'Login',
+      timestamp: '2025-03-15T14:30:00Z',
+      ipAddress: '192.168.1.100',
+      device: 'Chrome on Windows',
+      location: 'New York, USA'
+    },
+    {
+      id: 2,
+      action: 'Password Changed',
+      timestamp: '2025-03-10T09:15:00Z',
+      ipAddress: '192.168.1.100',
+      device: 'Chrome on Windows',
+      location: 'New York, USA'
+    },
+    {
+      id: 3,
+      action: 'Profile Updated',
+      timestamp: '2025-03-08T16:45:00Z',
+      ipAddress: '192.168.1.100',
+      device: 'Chrome on Windows',
+      location: 'New York, USA'
+    },
+    {
+      id: 4,
+      action: 'Login',
+      timestamp: '2025-03-07T08:20:00Z',
+      ipAddress: '192.168.1.101',
+      device: 'Safari on MacOS',
+      location: 'New York, USA'
+    }
+  ]);
+
+  const [notificationSettings, setNotificationSettings] = useState({
+    emailNotifications: true,
+    pushNotifications: true,
+    planningReminders: true,
+    systemAlerts: true,
+    weeklyReports: false,
+    marketingEmails: false
+  });
+
+  const handleProfileSave = () => {
+    // In a real app, this would make an API call to update the profile
     setIsEditing(false);
     toast({
-      title: "Profile Updated",
-      description: "Your profile has been successfully updated.",
+      title: "Success",
+      description: "Profile updated successfully"
     });
   };
 
-  const handleCancel = () => {
-    setIsEditing(false);
-    // Reset to original data if needed
+  const handlePasswordChange = () => {
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      toast({
+        title: "Error",
+        description: "New passwords do not match",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (passwordData.newPassword.length < 6) {
+      toast({
+        title: "Error",
+        description: "Password must be at least 6 characters long",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // In a real app, this would make an API call to change password
+    setShowPasswordDialog(false);
+    setPasswordData({
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: ''
+    });
+    toast({
+      title: "Success",
+      description: "Password updated successfully"
+    });
   };
 
-  const handleInputChange = (field, value) => {
-    setProfileData(prev => ({
+  const handleAvatarUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // In a real app, this would upload the file to a server
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setProfileData(prev => ({
+          ...prev,
+          avatar: e.target.result
+        }));
+        toast({
+          title: "Success",
+          description: "Profile picture updated"
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleNotificationToggle = (setting) => {
+    setNotificationSettings(prev => ({
       ...prev,
-      [field]: value
+      [setting]: !prev[setting]
     }));
+    toast({
+      title: "Success",
+      description: "Notification preferences updated"
+    });
+  };
+
+  const getActivityIcon = (action) => {
+    switch (action) {
+      case 'Login':
+        return <UserCheck className="w-4 h-4 text-green-500" />;
+      case 'Password Changed':
+        return <Key className="w-4 h-4 text-blue-500" />;
+      case 'Profile Updated':
+        return <Edit className="w-4 h-4 text-orange-500" />;
+      default:
+        return <Activity className="w-4 h-4 text-gray-500" />;
+    }
+  };
+
+  const formatDateTime = (timestamp) => {
+    const date = new Date(timestamp);
+    return {
+      date: date.toLocaleDateString(),
+      time: date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
   };
 
   return (
