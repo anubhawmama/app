@@ -142,25 +142,13 @@ const PlanManagement = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b border-slate-200">
-        <div className="flex items-center justify-between h-16 px-6">
-          <div className="flex items-center">
-            <Button
-              variant="ghost"
-              onClick={() => navigate('/dashboard')}
-              className="mr-4"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Dashboard
-            </Button>
-            <div className="flex items-center space-x-3">
-              <Calendar className="h-5 w-5 text-slate-600" />
-              <h1 className="text-xl font-semibold text-slate-900">Plan Management</h1>
-              <Badge variant="outline">{user?.role}</Badge>
-            </div>
-          </div>
+    <AppLayout 
+      title="Plan Management" 
+      subtitle="Create and manage planning cycles for departments"
+    >
+      <div className="space-y-6">
+        {/* Create Plan Button */}
+        <div className="flex justify-end">
           <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
             <DialogTrigger asChild>
               <Button className="bg-slate-900 hover:bg-slate-800">
