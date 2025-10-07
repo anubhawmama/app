@@ -130,24 +130,24 @@ class BackendTester:
         """Create test users with different roles"""
         self.log("Creating test users...")
         
-        # Create test users with different roles
+        # Use the test users provided in the review request
         test_users = [
             {
                 "name": "Super Administrator",
-                "email": "superadmin@planforge.com", 
-                "password": "SuperAdmin123!",
+                "email": "superadmin@demo.com", 
+                "password": "super123",
                 "role": "SuperAdmin"
             },
             {
                 "name": "System Admin",
-                "email": "admin@planforge.com",
-                "password": "Admin123!",
+                "email": "admin@demo.com",
+                "password": "admin123",
                 "role": "Admin"
             },
             {
                 "name": "Content Creator",
-                "email": "creator@planforge.com", 
-                "password": "Creator123!",
+                "email": "creator@demo.com", 
+                "password": "creator123",
                 "role": "Creator"
             }
         ]
