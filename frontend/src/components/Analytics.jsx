@@ -422,7 +422,7 @@ const Analytics = () => {
           </Card>
         </div>
       </div>
-    </div>
+    </AppLayout>
   );
 };
 
