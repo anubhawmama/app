@@ -204,217 +204,419 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b border-slate-200">
-        <div className="flex items-center h-16 px-6">
-          <Button
-            variant="ghost"
-            onClick={() => navigate('/dashboard')}
-            className="mr-4"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Dashboard
-          </Button>
-          <h1 className="text-xl font-semibold text-slate-900">Profile Settings</h1>
-        </div>
-      </div>
+    <AppLayout 
+      title="Profile Settings" 
+      subtitle="Manage your account information and preferences"
+    >
+      <div className="space-y-6">
+        <Tabs defaultValue="profile" className="w-full">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="profile" className="flex items-center space-x-2">
+              <User className="h-4 w-4" />
+              <span>Profile</span>
+            </TabsTrigger>
+            <TabsTrigger value="security" className="flex items-center space-x-2">
+              <Shield className="h-4 w-4" />
+              <span>Security</span>
+            </TabsTrigger>
+            <TabsTrigger value="notifications" className="flex items-center space-x-2">
+              <Bell className="h-4 w-4" />
+              <span>Notifications</span>
+            </TabsTrigger>
+            <TabsTrigger value="activity" className="flex items-center space-x-2">
+              <Activity className="h-4 w-4" />
+              <span>Activity</span>
+            </TabsTrigger>
+          </TabsList>
 
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Profile Card */}
-          <div className="lg:col-span-1">
+          {/* Profile Tab */}
+          <TabsContent value="profile" className="space-y-6">
             <Card className="shadow-lg">
-              <CardHeader className="text-center pb-6">
-                <div className="flex justify-center mb-4">
-                  <Avatar className="h-24 w-24">
-                    <AvatarImage src="/api/placeholder/150/150" alt={profileData.name} />
-                    <AvatarFallback className="text-2xl bg-slate-900 text-white">
-                      {profileData.name.split(' ').map(n => n[0]).join('')}
-                    </AvatarFallback>
-                  </Avatar>
-                </div>
-                <CardTitle className="text-xl text-slate-900">{profileData.name}</CardTitle>
-                <CardDescription className="text-slate-600">{profileData.email}</CardDescription>
-                <div className="flex justify-center mt-3">
-                  <Badge className="bg-slate-900 text-white">Administrator</Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center text-sm text-slate-600">
-                  <MapPin className="h-4 w-4 mr-2" />
-                  {profileData.location}
-                </div>
-                <div className="flex items-center text-sm text-slate-600">
-                  <User className="h-4 w-4 mr-2" />
-                  {profileData.department}
-                </div>
-                <Separator />
-                <div className="text-sm">
-                  <p className="text-slate-500 mb-1">Member since</p>
-                  <p className="text-slate-900 font-medium">
-                    {new Date(profileData.joinDate).toLocaleDateString('en-US', { 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
-                    })}
-                  </p>
-                </div>
-                <Button 
-                  variant="outline" 
-                  className="w-full"
-                  onClick={() => setIsEditing(!isEditing)}
-                >
-                  <Edit className="h-4 w-4 mr-2" />
-                  Edit Profile
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Profile Information */}
-          <div className="lg:col-span-2 space-y-6">
-            <Card className="shadow-lg">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle className="text-xl text-slate-900">Personal Information</CardTitle>
-                  <CardDescription>Update your personal details and preferences</CardDescription>
-                </div>
-                {isEditing && (
-                  <div className="flex space-x-2">
-                    <Button onClick={handleSave} size="sm">
-                      <Save className="h-4 w-4 mr-2" />
-                      Save Changes
-                    </Button>
-                    <Button onClick={handleCancel} variant="outline" size="sm">
-                      <X className="h-4 w-4 mr-2" />
-                      Cancel
-                    </Button>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <User className="h-5 w-5" />
+                    <span>Profile Information</span>
                   </div>
-                )}
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="name" className="text-slate-700">Full Name</Label>
+                  <Button
+                    variant={isEditing ? "outline" : "default"}
+                    onClick={() => {
+                      if (isEditing) {
+                        handleProfileSave();
+                      } else {
+                        setIsEditing(true);
+                      }
+                    }}
+                  >
                     {isEditing ? (
+                      <>
+                        <Save className="w-4 h-4 mr-2" />
+                        Save Changes
+                      </>
+                    ) : (
+                      <>
+                        <Edit className="w-4 h-4 mr-2" />
+                        Edit Profile
+                      </>
+                    )}
+                  </Button>
+                </CardTitle>
+                <CardDescription>
+                  Update your personal information and profile details
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {/* Avatar Section */}
+                  <div className="flex items-center space-x-6">
+                    <div className="relative">
+                      <Avatar className="w-24 h-24">
+                        <AvatarImage src={profileData.avatar} alt={profileData.name} />
+                        <AvatarFallback className="text-2xl bg-slate-100">
+                          {profileData.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      {isEditing && (
+                        <label className="absolute -bottom-2 -right-2 bg-slate-900 text-white p-2 rounded-full cursor-pointer hover:bg-slate-800 transition-colors">
+                          <Camera className="w-4 h-4" />
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleAvatarUpload}
+                            className="hidden"
+                          />
+                        </label>
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-semibold text-slate-900">{profileData.name}</h3>
+                      <p className="text-slate-600">{profileData.title}</p>
+                      <div className="flex items-center space-x-4 mt-2 text-sm text-slate-500">
+                        <span className="flex items-center space-x-1">
+                          <MapPin className="w-3 h-3" />
+                          <span>{profileData.location}</span>
+                        </span>
+                        <span className="flex items-center space-x-1">
+                          <Calendar className="w-3 h-3" />
+                          <span>Joined {new Date(profileData.joinDate).toLocaleDateString()}</span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Profile Form */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Full Name</Label>
                       <Input
                         id="name"
                         value={profileData.name}
-                        onChange={(e) => handleInputChange('name', e.target.value)}
-                        className="border-slate-200 focus:border-slate-400"
+                        onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
+                        disabled={!isEditing}
                       />
-                    ) : (
-                      <div className="p-3 bg-slate-50 rounded-lg text-slate-900">
-                        {profileData.name}
-                      </div>
-                    )}
-                  </div>
+                    </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="text-slate-700">Email Address</Label>
-                    {isEditing ? (
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email Address</Label>
                       <Input
                         id="email"
                         type="email"
                         value={profileData.email}
-                        onChange={(e) => handleInputChange('email', e.target.value)}
-                        className="border-slate-200 focus:border-slate-400"
+                        onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
+                        disabled={!isEditing}
                       />
-                    ) : (
-                      <div className="p-3 bg-slate-50 rounded-lg text-slate-900 flex items-center">
-                        <Mail className="h-4 w-4 mr-2 text-slate-400" />
-                        {profileData.email}
-                      </div>
-                    )}
-                  </div>
+                    </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="phone" className="text-slate-700">Phone Number</Label>
-                    {isEditing ? (
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Phone Number</Label>
                       <Input
                         id="phone"
                         value={profileData.phone}
-                        onChange={(e) => handleInputChange('phone', e.target.value)}
-                        className="border-slate-200 focus:border-slate-400"
+                        onChange={(e) => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
+                        disabled={!isEditing}
                       />
-                    ) : (
-                      <div className="p-3 bg-slate-50 rounded-lg text-slate-900 flex items-center">
-                        <Phone className="h-4 w-4 mr-2 text-slate-400" />
-                        {profileData.phone}
-                      </div>
-                    )}
-                  </div>
+                    </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="location" className="text-slate-700">Location</Label>
-                    {isEditing ? (
+                    <div className="space-y-2">
+                      <Label htmlFor="location">Location</Label>
                       <Input
                         id="location"
                         value={profileData.location}
-                        onChange={(e) => handleInputChange('location', e.target.value)}
-                        className="border-slate-200 focus:border-slate-400"
+                        onChange={(e) => setProfileData(prev => ({ ...prev, location: e.target.value }))}
+                        disabled={!isEditing}
                       />
-                    ) : (
-                      <div className="p-3 bg-slate-50 rounded-lg text-slate-900 flex items-center">
-                        <MapPin className="h-4 w-4 mr-2 text-slate-400" />
-                        {profileData.location}
-                      </div>
-                    )}
-                  </div>
-                </div>
+                    </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="bio" className="text-slate-700">Bio</Label>
-                  {isEditing ? (
-                    <textarea
+                    <div className="space-y-2">
+                      <Label htmlFor="department">Department</Label>
+                      <Input
+                        id="department"
+                        value={profileData.department}
+                        onChange={(e) => setProfileData(prev => ({ ...prev, department: e.target.value }))}
+                        disabled={!isEditing}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="title">Job Title</Label>
+                      <Input
+                        id="title"
+                        value={profileData.title}
+                        onChange={(e) => setProfileData(prev => ({ ...prev, title: e.target.value }))}
+                        disabled={!isEditing}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="bio">Bio</Label>
+                    <Textarea
                       id="bio"
                       value={profileData.bio}
-                      onChange={(e) => handleInputChange('bio', e.target.value)}
-                      rows={4}
-                      className="w-full p-3 border border-slate-200 rounded-lg focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200 resize-none"
+                      onChange={(e) => setProfileData(prev => ({ ...prev, bio: e.target.value }))}
+                      disabled={!isEditing}
+                      rows={3}
+                      placeholder="Tell us about yourself..."
                     />
-                  ) : (
-                    <div className="p-3 bg-slate-50 rounded-lg text-slate-900">
-                      {profileData.bio}
+                  </div>
+
+                  {isEditing && (
+                    <div className="flex justify-end space-x-2">
+                      <Button variant="outline" onClick={() => setIsEditing(false)}>
+                        <X className="w-4 h-4 mr-2" />
+                        Cancel
+                      </Button>
                     </div>
                   )}
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
 
-            {/* Security Settings */}
+          {/* Security Tab */}
+          <TabsContent value="security" className="space-y-6">
             <Card className="shadow-lg">
               <CardHeader>
-                <CardTitle className="text-xl text-slate-900">Security Settings</CardTitle>
-                <CardDescription>Manage your account security and privacy</CardDescription>
+                <CardTitle className="flex items-center space-x-2">
+                  <Shield className="h-5 w-5" />
+                  <span>Security Settings</span>
+                </CardTitle>
+                <CardDescription>
+                  Manage your password and account security
+                </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
-                  <div>
-                    <h4 className="font-medium text-slate-900">Password</h4>
-                    <p className="text-sm text-slate-600">Last updated 2 months ago</p>
+              <CardContent className="space-y-6">
+                <div className="bg-slate-50 p-4 rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium text-slate-900">Password</h4>
+                      <p className="text-sm text-slate-600">Last changed 5 days ago</p>
+                    </div>
+                    <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
+                      <DialogTrigger asChild>
+                        <Button variant="outline">
+                          <Key className="w-4 h-4 mr-2" />
+                          Change Password
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Change Password</DialogTitle>
+                          <DialogDescription>
+                            Enter your current password and choose a new one
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="currentPassword">Current Password</Label>
+                            <div className="relative">
+                              <Input
+                                id="currentPassword"
+                                type={showPasswords.current ? "text" : "password"}
+                                value={passwordData.currentPassword}
+                                onChange={(e) => setPasswordData(prev => ({ ...prev, currentPassword: e.target.value }))}
+                              />
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                                onClick={() => setShowPasswords(prev => ({ ...prev, current: !prev.current }))}
+                              >
+                                {showPasswords.current ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                              </Button>
+                            </div>
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label htmlFor="newPassword">New Password</Label>
+                            <div className="relative">
+                              <Input
+                                id="newPassword"
+                                type={showPasswords.new ? "text" : "password"}
+                                value={passwordData.newPassword}
+                                onChange={(e) => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
+                              />
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                                onClick={() => setShowPasswords(prev => ({ ...prev, new: !prev.new }))}
+                              >
+                                {showPasswords.new ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                              </Button>
+                            </div>
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                            <div className="relative">
+                              <Input
+                                id="confirmPassword"
+                                type={showPasswords.confirm ? "text" : "password"}
+                                value={passwordData.confirmPassword}
+                                onChange={(e) => setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                              />
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                                onClick={() => setShowPasswords(prev => ({ ...prev, confirm: !prev.confirm }))}
+                              >
+                                {showPasswords.confirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex justify-end space-x-2">
+                          <Button variant="outline" onClick={() => setShowPasswordDialog(false)}>
+                            Cancel
+                          </Button>
+                          <Button onClick={handlePasswordChange}>
+                            Update Password
+                          </Button>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
                   </div>
-                  <Button variant="outline" size="sm">
-                    Change Password
-                  </Button>
                 </div>
-                
-                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
-                  <div>
-                    <h4 className="font-medium text-slate-900">Two-Factor Authentication</h4>
-                    <p className="text-sm text-slate-600">Add an extra layer of security</p>
+
+                <div className="bg-slate-50 p-4 rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium text-slate-900">Two-Factor Authentication</h4>
+                      <p className="text-sm text-slate-600">Add an extra layer of security to your account</p>
+                    </div>
+                    <Badge variant="outline" className="bg-yellow-100 text-yellow-800">
+                      Not Enabled
+                    </Badge>
                   </div>
-                  <Button variant="outline" size="sm">
-                    Enable 2FA
-                  </Button>
+                </div>
+
+                <div className="bg-slate-50 p-4 rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium text-slate-900">Active Sessions</h4>
+                      <p className="text-sm text-slate-600">Manage devices that are signed in to your account</p>
+                    </div>
+                    <Button variant="outline">
+                      View Sessions
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
-          </div>
-        </div>
+          </TabsContent>
+
+          {/* Notifications Tab */}
+          <TabsContent value="notifications" className="space-y-6">
+            <Card className="shadow-lg">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Bell className="h-5 w-5" />
+                  <span>Notification Preferences</span>
+                </CardTitle>
+                <CardDescription>
+                  Choose what notifications you want to receive
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {Object.entries(notificationSettings).map(([key, value]) => (
+                  <div key={key} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+                    <div>
+                      <h4 className="font-medium text-slate-900 capitalize">
+                        {key.replace(/([A-Z])/g, ' $1').trim()}
+                      </h4>
+                      <p className="text-sm text-slate-600">
+                        {key === 'emailNotifications' && 'Receive important updates via email'}
+                        {key === 'pushNotifications' && 'Get real-time notifications in your browser'}
+                        {key === 'planningReminders' && 'Reminders about planning deadlines and submissions'}
+                        {key === 'systemAlerts' && 'Important system maintenance and security alerts'}
+                        {key === 'weeklyReports' && 'Weekly summary reports of your activity'}
+                        {key === 'marketingEmails' && 'Product updates and feature announcements'}
+                      </p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={value}
+                        onChange={() => handleNotificationToggle(key)}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Activity Tab */}
+          <TabsContent value="activity" className="space-y-6">
+            <Card className="shadow-lg">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Activity className="h-5 w-5" />
+                  <span>Recent Activity</span>
+                </CardTitle>
+                <CardDescription>
+                  View your recent account activity and login history
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {activityLog.map((activity) => {
+                    const { date, time } = formatDateTime(activity.timestamp);
+                    return (
+                      <div key={activity.id} className="flex items-start space-x-4 p-4 bg-slate-50 rounded-lg">
+                        <div className="flex-shrink-0 mt-1">
+                          {getActivityIcon(activity.action)}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-1">
+                            <h4 className="font-medium text-slate-900">{activity.action}</h4>
+                            <div className="text-sm text-slate-500">
+                              {date} at {time}
+                            </div>
+                          </div>
+                          <div className="text-sm text-slate-600 space-y-1">
+                            <p>Device: {activity.device}</p>
+                            <p>IP Address: {activity.ipAddress}</p>
+                            <p>Location: {activity.location}</p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
-    </div>
+    </AppLayout>
   );
 };
 
