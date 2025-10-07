@@ -834,6 +834,8 @@ class BackendTester:
         # Run tests in order
         self.test_health_check()
         self.test_authentication_system()
+        self.test_logout_endpoint()
+        self.test_cors_headers()
         self.test_user_management()
         self.test_department_management()
         self.test_brand_management()
