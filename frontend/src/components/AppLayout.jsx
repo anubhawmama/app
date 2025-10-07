@@ -12,7 +12,8 @@ import {
   BarChart3,
   FileText,
   Activity,
-  Target
+  Target,
+  Shield
 } from 'lucide-react';
 import { mockUserPermissions } from '../data/mockData';
 
