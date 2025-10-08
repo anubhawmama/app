@@ -688,7 +688,7 @@ export const mockUserPermissions = {
   },
   'Admin': {
     role: 'Admin',
-    canEditSystemMetadata: false,
+    canEditSystemMetadata: true,
     canViewAllDepartments: true,
     canEditAllPlanning: false,
     canApproveAll: false,
