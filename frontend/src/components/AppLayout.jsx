@@ -51,7 +51,7 @@ const AppLayout = ({ children, title, subtitle }) => {
 
   // Auto-expand menus when child routes are active
   useEffect(() => {
-    const menuItems = [
+    const menuItemsWithSubmenus = [
       ...(permissions.canEditSystemMetadata ? [{
         submenuKey: 'systemManagement',
         submenuItems: [
@@ -60,14 +60,21 @@ const AppLayout = ({ children, title, subtitle }) => {
           { path: '/system-management/categories' },
           { path: '/system-management/subcategories' },
           { path: '/system-management/products' },
-          { path: '/system-management/users' },
-          { path: '/permission' }
+          { path: '/system-management/users' }
+        ]
+      }] : []),
+      ...(permissions.canEditSystemMetadata ? [{
+        submenuKey: 'permission',
+        submenuItems: [
+          { path: '/permission/department-level' },
+          { path: '/permission/user-level' },
+          { path: '/permission/role-level' }
         ]
       }] : [])
     ];
 
     const newExpandedMenus = {};
-    menuItems.forEach(item => {
+    menuItemsWithSubmenus.forEach(item => {
       if (item.submenuItems && isSubmenuActive(item.submenuItems)) {
         newExpandedMenus[item.submenuKey] = true;
       }
