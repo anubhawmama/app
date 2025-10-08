@@ -101,13 +101,23 @@ const AppLayout = ({ children, title, subtitle }) => {
         { icon: Layers, label: 'Categories', path: '/system-management/categories' },
         { icon: Layers, label: 'Subcategories', path: '/system-management/subcategories' },
         { icon: Target, label: 'Products', path: '/system-management/products' },
-        { icon: Users, label: 'Users', path: '/system-management/users' },
-        { icon: Shield, label: 'Permission', path: '/permission' }
+        { icon: Users, label: 'Users', path: '/system-management/users' }
       ]
     }] : []),
     ...(permissions.canSendRequests ? [{ icon: FileText, label: 'Planning Requests', path: '/planning-requests' }] : []),
     ...(permissions.canAccessPlanning ? [{ icon: Target, label: 'Plan Management', path: '/plan-management' }] : []),
     { icon: Activity, label: 'Reports', path: '/reports' },
+    ...(permissions.canEditSystemMetadata ? [{
+      icon: Shield,
+      label: 'Permission',
+      hasSubmenu: true,
+      submenuKey: 'permission',
+      submenuItems: [
+        { icon: Building2, label: 'Department Level', path: '/permission/department-level' },
+        { icon: Users, label: 'User Level', path: '/permission/user-level' },
+        { icon: Key, label: 'Role Level', path: '/permission/role-level' }
+      ]
+    }] : []),
   ];
 
   return (
