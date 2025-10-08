@@ -49,6 +49,36 @@ const AppLayout = ({ children, title, subtitle }) => {
     }));
   };
 
+  // Auto-expand menus when child routes are active
+  useEffect(() => {
+    const menuItems = [
+      ...(permissions.canEditSystemMetadata ? [{
+        submenuKey: 'systemManagement',
+        submenuItems: [
+          { path: '/system-management/departments' },
+          { path: '/system-management/brands' },
+          { path: '/system-management/categories' },
+          { path: '/system-management/subcategories' },
+          { path: '/system-management/products' },
+          { path: '/system-management/users' },
+          { path: '/permission' }
+        ]
+      }] : [])
+    ];
+
+    const newExpandedMenus = {};
+    menuItems.forEach(item => {
+      if (item.submenuItems && isSubmenuActive(item.submenuItems)) {
+        newExpandedMenus[item.submenuKey] = true;
+      }
+    });
+
+    setExpandedMenus(prev => ({
+      ...prev,
+      ...newExpandedMenus
+    }));
+  }, [location.pathname, permissions.canEditSystemMetadata]);
+
   const menuItems = [
     { icon: Building2, label: 'Dashboard', path: '/dashboard' },
     { icon: Calendar, label: 'Planning', path: '/planning' },
