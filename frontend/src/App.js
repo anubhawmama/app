@@ -176,6 +176,21 @@ function App() {
                   <Permission />
                 </ProtectedRoute>
               } />
+              <Route path="/permission/department-level" element={
+                <ProtectedRoute>
+                  <DepartmentLevelPermission />
+                </ProtectedRoute>
+              } />
+              <Route path="/permission/user-level" element={
+                <ProtectedRoute>
+                  <UserLevelPermission />
+                </ProtectedRoute>
+              } />
+              <Route path="/permission/role-level" element={
+                <ProtectedRoute>
+                  <RoleLevelPermission />
+                </ProtectedRoute>
+              } />
               <Route path="/notifications" element={
                 <ProtectedRoute>
                   <Notifications />
