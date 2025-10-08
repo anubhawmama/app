@@ -183,6 +183,36 @@ function App() {
                   <Profile />
                 </ProtectedRoute>
               } />
+              <Route path="/system-management/departments" element={
+                <ProtectedRoute>
+                  <Departments />
+                </ProtectedRoute>
+              } />
+              <Route path="/system-management/brands" element={
+                <ProtectedRoute>
+                  <Brands />
+                </ProtectedRoute>
+              } />
+              <Route path="/system-management/categories" element={
+                <ProtectedRoute>
+                  <Brands />
+                </ProtectedRoute>
+              } />
+              <Route path="/system-management/subcategories" element={
+                <ProtectedRoute>
+                  <Categories />
+                </ProtectedRoute>
+              } />
+              <Route path="/system-management/products" element={
+                <ProtectedRoute>
+                  <Categories />
+                </ProtectedRoute>
+              } />
+              <Route path="/system-management/users" element={
+                <ProtectedRoute>
+                  <Users />
+                </ProtectedRoute>
+              } />
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               {/* Catch-all route for 404 */}
               <Route path="*" element={<NotFound />} />
