@@ -26,6 +26,7 @@ const AppLayout = ({ children, title, subtitle }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
+  const [expandedMenus, setExpandedMenus] = useState({});
 
   const permissions = mockUserPermissions[user?.role] || {
     canViewReports: false,
@@ -37,16 +38,39 @@ const AppLayout = ({ children, title, subtitle }) => {
   };
 
   const isActive = (path) => location.pathname === path;
+  const isSubmenuActive = (submenuItems) => {
+    return submenuItems.some(item => location.pathname === item.path);
+  };
+
+  const toggleSubmenu = (menuKey) => {
+    setExpandedMenus(prev => ({
+      ...prev,
+      [menuKey]: !prev[menuKey]
+    }));
+  };
 
   const menuItems = [
     { icon: Building2, label: 'Dashboard', path: '/dashboard' },
     { icon: Calendar, label: 'Planning', path: '/planning' },
     { icon: BarChart3, label: 'Analytics', path: '/analytics' },
-    ...(permissions.canEditSystemMetadata ? [{ icon: Settings, label: 'System Management', path: '/system-management' }] : []),
+    ...(permissions.canEditSystemMetadata ? [{
+      icon: Settings,
+      label: 'System Management',
+      hasSubmenu: true,
+      submenuKey: 'systemManagement',
+      submenuItems: [
+        { icon: Building2, label: 'Departments', path: '/system-management/departments' },
+        { icon: Tag, label: 'Brands', path: '/system-management/brands' },
+        { icon: Layers, label: 'Categories', path: '/system-management/categories' },
+        { icon: Layers, label: 'Subcategories', path: '/system-management/subcategories' },
+        { icon: Target, label: 'Products', path: '/system-management/products' },
+        { icon: Users, label: 'Users', path: '/system-management/users' },
+        { icon: Shield, label: 'Permission', path: '/permission' }
+      ]
+    }] : []),
     ...(permissions.canSendRequests ? [{ icon: FileText, label: 'Planning Requests', path: '/planning-requests' }] : []),
     ...(permissions.canAccessPlanning ? [{ icon: Target, label: 'Plan Management', path: '/plan-management' }] : []),
     { icon: Activity, label: 'Reports', path: '/reports' },
-    ...(permissions.canEditSystemMetadata ? [{ icon: Shield, label: 'Permission', path: '/permission' }] : []),
   ];
 
   return (
