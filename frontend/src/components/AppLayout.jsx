@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../App';
 import { Button } from './ui/button';
@@ -13,7 +13,12 @@ import {
   FileText,
   Activity,
   Target,
-  Shield
+  Shield,
+  ChevronDown,
+  ChevronRight,
+  Tag,
+  Layers,
+  Key
 } from 'lucide-react';
 import { mockUserPermissions } from '../data/mockData';
 
