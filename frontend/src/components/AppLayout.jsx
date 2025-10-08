@@ -90,23 +90,75 @@ const AppLayout = ({ children, title, subtitle }) => {
           <ul className="space-y-1">
             {menuItems.map((item, index) => (
               <li key={index}>
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (item.path) {
-                      navigate(item.path);
-                    }
-                  }}
-                  className={`flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${
-                    isActive(item.path)
-                      ? 'bg-slate-900 text-white'
-                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                  }`}
-                >
-                  <item.icon className="mr-3 h-4 w-4" />
-                  {item.label}
-                </a>
+                {item.hasSubmenu ? (
+                  <div>
+                    {/* Main Menu Item with Submenu */}
+                    <button
+                      onClick={() => toggleSubmenu(item.submenuKey)}
+                      className={`w-full flex items-center justify-between px-2 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${
+                        isSubmenuActive(item.submenuItems)
+                          ? 'bg-slate-900 text-white'
+                          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      }`}
+                    >
+                      <div className="flex items-center">
+                        <item.icon className="mr-3 h-4 w-4" />
+                        {item.label}
+                      </div>
+                      {expandedMenus[item.submenuKey] ? (
+                        <ChevronDown className="h-4 w-4" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4" />
+                      )}
+                    </button>
+                    
+                    {/* Submenu Items */}
+                    {expandedMenus[item.submenuKey] && (
+                      <ul className="mt-2 ml-6 space-y-1">
+                        {item.submenuItems.map((subItem, subIndex) => (
+                          <li key={subIndex}>
+                            <a
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                if (subItem.path) {
+                                  navigate(subItem.path);
+                                }
+                              }}
+                              className={`flex items-center px-2 py-1.5 text-sm rounded-md transition-colors duration-200 ${
+                                isActive(subItem.path)
+                                  ? 'bg-slate-900 text-white'
+                                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                              }`}
+                            >
+                              <subItem.icon className="mr-2 h-3 w-3" />
+                              {subItem.label}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ) : (
+                  /* Regular Menu Item */
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (item.path) {
+                        navigate(item.path);
+                      }
+                    }}
+                    className={`flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${
+                      isActive(item.path)
+                        ? 'bg-slate-900 text-white'
+                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                    }`}
+                  >
+                    <item.icon className="mr-3 h-4 w-4" />
+                    {item.label}
+                  </a>
+                )}
               </li>
             ))}
           </ul>
