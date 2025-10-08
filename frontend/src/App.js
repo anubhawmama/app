@@ -195,7 +195,7 @@ function App() {
               } />
               <Route path="/system-management/categories" element={
                 <ProtectedRoute>
-                  <Brands />
+                  <Categories />
                 </ProtectedRoute>
               } />
               <Route path="/system-management/subcategories" element={
